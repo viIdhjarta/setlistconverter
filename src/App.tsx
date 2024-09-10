@@ -23,8 +23,7 @@ interface Setlist {
   songs: Song[];
 }
 
-export async function getSetlist(setlistFmId: string): Promise<Setlist> {
-  // const url = `https://api.setlist.fm/rest/1.0/setlist/${setlistFmId}`;
+export async function getSetlistFromSetlistFm(setlistFmId: string): Promise<Setlist> {
   const url = `http://localhost:3000/api/setlist/${setlistFmId}`;
   const headers = {
     "x-api-key": "rvH9s-nOQE4FOGgLByWj1VfmjzqIaEt5Q8wB",
@@ -32,74 +31,48 @@ export async function getSetlist(setlistFmId: string): Promise<Setlist> {
     'Access-Control-Allow-Origin': '*'
   };
 
-  try {
-    const response = await axios.get(url, { headers });
-    const data = response.data;
+  const response = await axios.get(url, { headers });
+  return response.data;
+};
 
-    const artistName = data.artist.name;
-    const eventDate = new Date(data.eventDate.split('-').reverse().join('-'));
-    const venueData = data.venue;
-    const cityData = venueData.city;
-    const country = cityData.country.name;
-    const city = `${cityData.name}, ${country}`;
-    const venue = venueData.name;
-    const tourName = data.tour?.name || "";
+export async function getSetlistFromLiveFans(): Promise<Setlist> {
 
+  const url = `http://localhost:3000/scrape`;
 
-    const setlistSongs: Song[] = [];
-    let index = 0;
+  const headers = {
+    "Accept": "application/json",
+    'Access-Control-Allow-Origin': '*'
+  };
 
-    data.sets.set.forEach((setData: any) => {
-      setData.song.forEach((songData: any) => {
-        index++;
-        const songName = songData.name;
-        const isTape = songData.tape || false;
-        const isCover = 'cover' in songData;
-        const medleyParts = songName.split(" / ");
-        const isMedleyPart = medleyParts.length > 1;
+  const response = await axios.get(url, { headers });
+  return response.data;
+};
 
-        medleyParts.forEach((medleyPart: string) => {
-          const originalArtist = isCover ? songData.cover.name : artistName;
-          const song: Song = {
-            index,
-            name: medleyPart,
-            artist: artistName,
-            original_artist: originalArtist,
-            is_tape: isTape,
-            is_cover: isCover,
-            is_medley_part: isMedleyPart
-          };
-          setlistSongs.push(song);
-        });
-      });
-    });
-
-    const setlist: Setlist = {
-      artist_name: artistName,
-      event_date: eventDate,
-      location: city,
-      venue: venue,
-      tour_name: tourName,
-      songs: setlistSongs
-    };
-
-    return setlist;
-  } catch (error) {
-    console.error('Error fetching setlist:', error);
-    throw error;
-  }
-}
 
 function App() {
   const [inputValue, setInputValue] = useState('')
 
-  const handleButtonClick = () => {
+  const setlistFM = async () => {
     console.log('Input value:', inputValue);
-    // ここで入力値を使って何かを行うことができます
-    let setlist = getSetlist('2b522c02')
-    console.log('Setlist:', setlist)
 
+    try {
+      let setlist = await getSetlistFromSetlistFm('43ab9f07');
+      console.log('Setlist:', setlist.songs);
+    } catch (error) {
+      console.error('Error:', error);
+    }
 
+  };
+
+  const liveFans = async () => {
+    console.log('Input value:', inputValue);
+
+    try {
+      let setlist = await getSetlistFromLiveFans();
+      console.log('Setlist:', setlist);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -109,7 +82,8 @@ function App() {
       <div className="p-4">
         <Field value={inputValue} onChange={setInputValue} />
         <br />
-        <Button onClick={handleButtonClick}>作成</Button>
+        <Button onClick={setlistFM}>setlistFMから作成</Button>
+        <Button onClick={liveFans}>LiveFansから作成</Button>
       </div>
     </>
   )
