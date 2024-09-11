@@ -5,6 +5,7 @@ import Field from './components/Field'
 import Button from './components/Button'
 // import Spotify from 'react-spotify-embed'
 import Iframe from "react-iframe";
+import { XAPIKEY } from '../env'
 
 interface Song {
   index: number;
@@ -29,7 +30,7 @@ interface Setlist {
 export async function getSetlistFromSetlistFm(setlistFmId: string): Promise<Setlist> {
   const url = `http://localhost:3000/api/setlistfm/${setlistFmId}`;
   const headers = {
-    "x-api-key": "rvH9s-nOQE4FOGgLByWj1VfmjzqIaEt5Q8wB",
+    "x-api-key": XAPIKEY,
     "Accept": "application/json",
     'Access-Control-Allow-Origin': '*'
   };
