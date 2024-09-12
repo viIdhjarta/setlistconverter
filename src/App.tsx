@@ -5,7 +5,7 @@ import Field from './components/Field'
 import Button from './components/Button'
 // import Spotify from 'react-spotify-embed'
 import Iframe from "react-iframe";
-import { UIProvider } from "@yamada-ui/react"
+import { useLoading } from "@yamada-ui/react"
 import { XAPIKEY } from '../env'
 
 
@@ -39,6 +39,7 @@ export async function getSetlistFromSetlistFm(setlistFmId: string): Promise<Setl
 
   const response = await axios.get(url, { headers });
   return response.data;
+
 };
 
 export async function getSetlistFromLiveFans(liveFansID: string): Promise<Setlist> {
@@ -51,21 +52,23 @@ export async function getSetlistFromLiveFans(liveFansID: string): Promise<Setlis
 
 
 function App() {
+  const { page } = useLoading();
+
   const [urlValue, setUrlValue] = useState('')
 
   const [setlist, setSetlist] = useState<Setlist | null>(null); // setlistの状態を追加
 
   const generate_url = () => {  // URLからID部分を取得　
     if (urlValue.includes("setlist.fm")) {
-      const last_hyphen_index =urlValue.lastIndexOf("-")
-      const dot_html_index =urlValue.lastIndexOf(".html")
+      const last_hyphen_index = urlValue.lastIndexOf("-")
+      const dot_html_index = urlValue.lastIndexOf(".html")
 
-      const id_part =urlValue.substring(last_hyphen_index + 1, dot_html_index);
+      const id_part = urlValue.substring(last_hyphen_index + 1, dot_html_index);
 
       return id_part
     } else if (urlValue.includes("livefans.jp")) {
-      const last_slash_index =urlValue.lastIndexOf("/")
-      const id_part =urlValue.substring(last_slash_index + 1)
+      const last_slash_index = urlValue.lastIndexOf("/")
+      const id_part = urlValue.substring(last_slash_index + 1)
       return id_part
     }
   }
@@ -81,11 +84,14 @@ function App() {
     }
 
     try {
+      page.start();
       let fetchedSetlist = await getSetlistFromSetlistFm(id_part);
       console.log('Setlist:', fetchedSetlist);
       setSetlist(fetchedSetlist); // 取得したsetlistを状態に保存      
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      page.finish();
     }
 
   };
@@ -109,35 +115,37 @@ function App() {
     }
   };
 
+
   return (
     <>
-      <UIProvider>
-        <h1 className="text-5xl">プレイリスト作成アプリ</h1>
-        <p>このアプリはsetlist.fmのURLからSpotifyのプレイリストを作成するアプリです</p>
-        <div className="p-4">
-          <Field value={urlValue} onChange={setUrlValue} />
-          <br />
-          <Button onClick={setlistFM}>setlistFMから作成</Button>
-          <br />
-          <br />
-          <Button onClick={liveFans}>LiveFansから作成</Button>
-        </div>
 
-        <Iframe
-          url={setlist ? `https://open.spotify.com/embed/playlist/${setlist.setlist_id} ` : ""}
-          width="100%"
-          height="600px"
-        />
-        {/* <Iframe
+
+      <h1 className="text-5xl">プレイリスト作成アプリ</h1>
+      <p>このアプリはsetlist.fmのURLからSpotifyのプレイリストを作成するアプリです</p>
+      <div className="p-4">
+        <Field value={urlValue} onChange={setUrlValue} />
+        <br />
+        <Button onClick={setlistFM}>setlistFMから作成</Button>
+        <br />
+        <br />
+        <Button onClick={liveFans}>LiveFansから作成</Button>
+      </div>
+
+      <Iframe
+        url={setlist ? `https://open.spotify.com/embed/playlist/${setlist.setlist_id} ` : ""}
+        width="100%"
+        height="600px"
+      />
+
+      {/* <Iframe
         url="https://embed.music.apple.com/us/album/meteora-deluxe-edition/590423275?itscg=30200&amp;itsct=music_box_player&amp;ls=1&amp;app=music&amp;mttnsubad=590423275&amp;theme=auto"
         width="100%"
         height="600px"
       /> */}
 
-      </UIProvider>
-
-
     </>
+
+
   )
 }
 
