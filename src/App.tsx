@@ -146,7 +146,11 @@ function App() {
         <br />
         <br />
         <Button onClick={handleButtonClick}>プレイリストを作成</Button>
-        
+        <div>
+          {selectedSite === 'SetlistFM' && (
+            <Checkbox>カバー曲を除外</Checkbox> // Checkboxを表示
+          )}
+        </div>
 
       </div>
 
