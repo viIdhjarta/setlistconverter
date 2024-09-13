@@ -5,7 +5,7 @@ import Field from './components/Field'
 import Button from './components/Button'
 // import Spotify from 'react-spotify-embed'
 import Iframe from "react-iframe";
-import { useLoading } from "@yamada-ui/react"
+import { Checkbox, Select, Option, useLoading } from "@yamada-ui/react"
 import { XAPIKEY } from '../env'
 
 
@@ -55,6 +55,8 @@ function App() {
   const { page } = useLoading();
 
   const [urlValue, setUrlValue] = useState('')
+
+  const [selectedSite, setSelectedSite] = useState('');
 
   const [setlist, setSetlist] = useState<Setlist | null>(null); // setlistの状態を追加
 
@@ -115,24 +117,41 @@ function App() {
     }
   };
 
+  const handleButtonClick = () => {
+    if (selectedSite === "SetlistFM") {
+      setlistFM();
+    } else if (selectedSite === "LiveFans") {
+      liveFans();
+    }
+  }
+
+  const handleSiteChange = (value: string) => {
+    setSelectedSite(value);
+  }
+
 
   return (
     <>
 
 
       <h1 className="text-5xl">プレイリスト作成アプリ</h1>
-      <p>このアプリはsetlist.fmのURLからSpotifyのプレイリストを作成するアプリです</p>
+      <p>setlist.fmのURLからSpotifyのプレイリストを作成</p>
       <div className="p-4">
+        <Select placeholder="サイトを選択" onChange={handleSiteChange}>
+          <Option value="SetlistFM">SetlistFM</Option>
+          <Option value="LiveFans">LiveFans</Option>
+        </Select>
         <Field value={urlValue} onChange={setUrlValue} />
         <br />
-        <Button onClick={setlistFM}>setlistFMから作成</Button>
         <br />
         <br />
-        <Button onClick={liveFans}>LiveFansから作成</Button>
+        <Button onClick={handleButtonClick}>プレイリストを作成</Button>
+        
+
       </div>
 
       <Iframe
-        url={setlist ? `https://open.spotify.com/embed/playlist/${setlist.setlist_id} ` : ""}
+        url={setlist ? `https://open.spotify.com/embed/playlist/${setlist.setlist_id} ` : []}
         width="100%"
         height="600px"
       />
