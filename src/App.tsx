@@ -2,10 +2,10 @@ import { useState } from 'react'
 import axios from 'axios';
 import './App.css'
 import Field from './components/Field'
-import Button from './components/Button'
+// import Button from './components/Button'
 // import Spotify from 'react-spotify-embed'
 import Iframe from "react-iframe";
-import { Checkbox, Select, Option, useLoading } from "@yamada-ui/react"
+import { Checkbox, CheckboxGroup, Select, Option, useLoading, useBoolean, Button } from "@yamada-ui/react"
 import { XAPIKEY } from '../env'
 
 
@@ -27,9 +27,11 @@ interface Setlist {
   tour_name: string;
   songs: Song[];
   setlist_id: string;
+  isCover?: boolean;
+  isTape?: boolean;
 }
 
-export async function getSetlistFromSetlistFm(setlistFmId: string): Promise<Setlist> {
+export async function getSetlistFromSetlistFm(setlistFmId: string, isCover: boolean): Promise<Setlist> {
   const url = `http://localhost:3000/api/setlistfm/${setlistFmId}`;
   const headers = {
     "x-api-key": XAPIKEY,
@@ -37,10 +39,12 @@ export async function getSetlistFromSetlistFm(setlistFmId: string): Promise<Setl
     'Access-Control-Allow-Origin': '*'
   };
 
-  const response = await axios.get(url, { headers });
-  return response.data;
+  const response = await axios.get(url, { headers, params: { isCover } }); // クエリパラメータでisCoverとisTapeを送信
+  console.log("nowdata", response.data)
 
-};
+  return response.data;
+}
+
 
 export async function getSetlistFromLiveFans(liveFansID: string): Promise<Setlist> {
 
@@ -59,6 +63,9 @@ function App() {
   const [selectedSite, setSelectedSite] = useState('');
 
   const [setlist, setSetlist] = useState<Setlist | null>(null); // setlistの状態を追加
+
+  const [isCovereChecked, { toggle: toggleCover }] = useBoolean(false)
+  
 
   const generate_url = () => {  // URLからID部分を取得　
     if (urlValue.includes("setlist.fm")) {
@@ -87,8 +94,10 @@ function App() {
 
     try {
       page.start();
-      let fetchedSetlist = await getSetlistFromSetlistFm(id_part);
+      let fetchedSetlist = await getSetlistFromSetlistFm(id_part, isCovereChecked);
       console.log('Setlist:', fetchedSetlist);
+      console.log('isCover:', isCovereChecked);
+      
       setSetlist(fetchedSetlist); // 取得したsetlistを状態に保存      
     } catch (error) {
       console.error('Error:', error);
@@ -141,16 +150,18 @@ function App() {
           <Option value="SetlistFM">SetlistFM</Option>
           <Option value="LiveFans">LiveFans</Option>
         </Select>
+        <div>
+          {selectedSite === 'SetlistFM' && (
+            <CheckboxGroup>
+              <Checkbox isChecked={isCovereChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
+            </CheckboxGroup>)}
+        </div>
         <Field value={urlValue} onChange={setUrlValue} />
         <br />
         <br />
         <br />
-        <Button onClick={handleButtonClick}>プレイリストを作成</Button>
-        <div>
-          {selectedSite === 'SetlistFM' && (
-            <Checkbox>カバー曲を除外</Checkbox> // Checkboxを表示
-          )}
-        </div>
+        <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
+
 
       </div>
 
