@@ -13,6 +13,16 @@ import {
     Container,
     Box,
     IconButton,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    useDisclosure,
+    FormControl,
+    Label,
+    Input,
 } from '@yamada-ui/react'
 import { FiTrash2, FiEdit } from 'react-icons/fi'
 
@@ -25,6 +35,8 @@ type Track = {
 
 export default function ModifyButton({ setlistId, children }: { setlistId: string; children: React.ReactNode }) {
     const [tracks, setTracks] = useState<Track[]>([])
+    const [editingTrack, setEditingTrack] = useState<Track | null>(null)
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const handleClick = async () => {
         const url = `http://localhost:3000/api/modify/${setlistId}`
@@ -52,16 +64,24 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
 
     const handleDelete = (id: string) => {
         setTracks(tracks.filter(track => track.id !== id))
-        console.log(tracks)
     }
 
-    const handleEdit = (id: string) => {
-        // 編集機能の実装（この例ではコンソールログのみ）
-        console.log(`Editing track with id: ${id}`)
+    const handleEdit = (track: Track) => {
+        setEditingTrack(track)
+        onOpen()
+    }
+
+    const handleSaveEdit = () => {
+        if (editingTrack) {
+            setTracks(tracks.map(track =>
+                track.id === editingTrack.id ? editingTrack : track
+            ))
+            onClose()
+        }
     }
 
     return (
-        <VStack  align="center" width="full">
+        <VStack align="center" width="full">
             <Button
                 onClick={handleClick}
                 colorScheme="primary"
@@ -94,7 +114,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                                             <IconButton
                                                 aria-label="Edit track"
                                                 icon={<FiEdit />}
-                                                onClick={() => handleEdit(track.id)}
+                                                onClick={() => handleEdit(track)}
                                                 variant="ghost"
                                                 colorScheme="blue"
                                             />
@@ -113,6 +133,40 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                     </VStack>
                 </Container>
             )}
+
+            <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
+                <ModalOverlay />
+                
+                    <ModalHeader>Edit Track</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        {editingTrack && (
+                            <VStack >
+                                <FormControl>
+                                    <Label>Track Name</Label>
+                                    <Input
+                                        value={editingTrack.name}
+                                        onChange={(e) => setEditingTrack({ ...editingTrack, name: e.target.value })}
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <Label>Artists</Label>
+                                    <Input
+                                        value={editingTrack.artists}
+                                        onChange={(e) => setEditingTrack({ ...editingTrack, artists: e.target.value })}
+                                    />
+                                </FormControl>
+                            </VStack>
+                        )}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
+                            Save
+                        </Button>
+                        <Button variant="ghost" onClick={onClose}>Cancel</Button>
+                    </ModalFooter>
+            
+            </Modal>
         </VStack>
     )
 }
