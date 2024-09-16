@@ -4,6 +4,7 @@ import './App.css'
 import Field from './components/Field'
 // import Button from './components/Button'
 // import Spotify from 'react-spotify-embed'
+import ModifyButton from './components/button/modifyButton';
 import Iframe from "react-iframe";
 import { Checkbox, CheckboxGroup, Select, Option, useLoading, useBoolean, Button } from "@yamada-ui/react"
 import { XAPIKEY } from '../env'
@@ -29,31 +30,6 @@ interface Setlist {
   setlist_id: string;
 }
 
-export async function getSetlist(setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> {
-  if (selectSite === "SetlistFM") {
-    const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
-    const headers = {
-      "x-api-key": XAPIKEY,
-      "Accept": "application/json",
-      'Access-Control-Allow-Origin': '*'
-    };
-
-    const response = await axios.get(url, { headers, params: { isCover } }); // クエリパラメータでisCoverとisTapeを送信
-    console.log("nowdata", response.data)
-
-    return response.data;
-  } else if (selectSite === "LiveFans") {
-    const url = `http://localhost:3000/api/livefans/${setlistId}`;
-
-    const response = await axios.get(url, { params: { isCover } });
-    return response.data;
-  } else {
-    throw new Error('Invalid site');
-  }
-}
-
-
-
 function App() {
   const { page } = useLoading();
 
@@ -65,7 +41,30 @@ function App() {
 
   const [isCoverChecked, { toggle: toggleCover }] = useBoolean(false)
 
-  const [errorMessage, setErrorMessage] = useState<boolean | null>(null); 
+  const [errorMessage, setErrorMessage] = useState<boolean | null>(null);
+
+  const getSetlist = async (setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> => {
+    if (selectSite === "SetlistFM") {
+      const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
+      const headers = {
+        "x-api-key": XAPIKEY,
+        "Accept": "application/json",
+        'Access-Control-Allow-Origin': '*'
+      };
+
+      const response = await axios.get(url, { headers, params: { isCover } }); // クエリパラメータでisCoverとisTapeを送信
+
+      return response.data;
+    } else if (selectSite === "LiveFans") {
+      const url = `http://localhost:3000/api/livefans/${setlistId}`;
+
+      const response = await axios.get(url, { params: { isCover } });
+      return response.data;
+    }
+
+    throw new Error("Invalid site selected");
+  }
+
 
   const generate_url = () => {  // URLからID部分を取得　
     if (urlValue.includes("setlist.fm")) {
@@ -82,9 +81,7 @@ function App() {
     }
   }
 
-  const feachApi = async () => {
-    console.log('Input value:', urlValue);
-
+  const feachApi = async () => {    // 入力されたURLからID部分を取得し、APIを叩く
     const id_part = generate_url();
 
     if (!id_part) { // id_partがundefinedの場合の処理
@@ -117,13 +114,12 @@ function App() {
     setSelectedSite(value);
   }
 
-
   return (
     <>
 
 
       <h1 className="text-5xl">プレイリスト作成アプリ</h1>
-      <p>setlist.fmのURLからSpotifyのプレイリストを作成</p>
+      <p>セットリスト投稿サイトのURLからSpotifyプレイリストを作成</p>
       <div className="p-4">
         <Select placeholder="サイトを選択" onChange={handleSiteChange}>
           <Option value="SetlistFM">SetlistFM</Option>
@@ -135,13 +131,16 @@ function App() {
               <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
             </CheckboxGroup>)}
         </div>
-        <Field  isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} />
+        <Field isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} />
         <br />
         <br />
         <br />
-        <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
-
-
+        <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button> 
+        <br />
+        <br />
+        {setlist && (
+        <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
+      )}
       </div>
 
       <Iframe
@@ -149,12 +148,9 @@ function App() {
         width="100%"
         height="600px"
       />
+    
+    
 
-      {/* <Iframe
-        url="https://embed.music.apple.com/us/album/meteora-deluxe-edition/590423275?itscg=30200&amp;itsct=music_box_player&amp;ls=1&amp;app=music&amp;mttnsubad=590423275&amp;theme=auto"
-        width="100%"
-        height="600px"
-      /> */}
 
     </>
 
