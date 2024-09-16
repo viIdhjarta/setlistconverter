@@ -1,14 +1,26 @@
 import React from 'react'
 import axios from 'axios'
 
-const ModifyButton: React.FC<{ setlistId: string , children: React.ReactNode }> = ({  setlistId, children }) => {
+const ModifyButton: React.FC<{ setlistId: string, children: React.ReactNode }> = ({ setlistId, children }) => {
     const handleClick = async () => {
-        console.log(setlistId)
 
         const url = `http://localhost:3000/api/modify/${setlistId}`;
 
         const response = await axios.get(url);
-        console.log(response.data.body.name)
+        const length: number = response.data.body.tracks.items.length;
+        for (let i = 0; i < length; i++) {
+            const artistLength: number = response.data.body.tracks.items[i].track.artists.length;
+            console.log(response.data.body.tracks.items[i].track.album.images[1].url);
+            console.log(response.data.body.tracks.items[i].track.name);
+            // アーティスト名を取得
+            let artistNames: string = '';
+            for (let j = 0; j < artistLength; j++) {
+                artistNames += (response.data.body.tracks.items[i].track.artists[j].name + (j < artistLength - 1 ? ', ' : '')); 
+            }
+            console.log(artistNames);
+        }
+
+        console.log(response.data.body.tracks.items[6].track);
         return response;
     }
 
