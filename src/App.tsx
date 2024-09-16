@@ -27,8 +27,6 @@ interface Setlist {
   tour_name: string;
   songs: Song[];
   setlist_id: string;
-  isCover?: boolean;
-  isTape?: boolean;
 }
 
 export async function getSetlistFromSetlistFm(setlistFmId: string, isCover: boolean): Promise<Setlist> {
@@ -64,7 +62,7 @@ function App() {
 
   const [setlist, setSetlist] = useState<Setlist | null>(null); // setlistの状態を追加
 
-  const [isCovereChecked, { toggle: toggleCover }] = useBoolean(false)
+  const [isCoverChecked, { toggle: toggleCover }] = useBoolean(false)
   
 
   const generate_url = () => {  // URLからID部分を取得　
@@ -94,9 +92,9 @@ function App() {
 
     try {
       page.start();
-      let fetchedSetlist = await getSetlistFromSetlistFm(id_part, isCovereChecked);
+      let fetchedSetlist = await getSetlistFromSetlistFm(id_part, isCoverChecked);
       console.log('Setlist:', fetchedSetlist);
-      console.log('isCover:', isCovereChecked);
+      console.log('isCover:', isCoverChecked);
       
       setSetlist(fetchedSetlist); // 取得したsetlistを状態に保存      
     } catch (error) {
@@ -151,9 +149,9 @@ function App() {
           <Option value="LiveFans">LiveFans</Option>
         </Select>
         <div>
-          {selectedSite === 'SetlistFM' && (
+          {selectedSite  && (
             <CheckboxGroup>
-              <Checkbox isChecked={isCovereChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
+              <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
             </CheckboxGroup>)}
         </div>
         <Field value={urlValue} onChange={setUrlValue} />
