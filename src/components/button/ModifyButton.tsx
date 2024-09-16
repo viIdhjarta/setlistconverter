@@ -1,8 +1,15 @@
 import React from 'react'
+import axios from 'axios'
 
 const ModifyButton: React.FC<{ setlistId: string , children: React.ReactNode }> = ({  setlistId, children }) => {
-    const handleClick = () => {
+    const handleClick = async () => {
         console.log(setlistId)
+
+        const url = `http://localhost:3000/api/modify/${setlistId}`;
+
+        const response = await axios.get(url);
+        console.log(response.data.body.name)
+        return response;
     }
 
     return (
