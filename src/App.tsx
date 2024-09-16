@@ -81,7 +81,7 @@ function App() {
     }
   }
 
-  const setlistFM = async () => {
+  const feachApi = async () => {
     console.log('Input value:', urlValue);
 
     const id_part = generate_url();
@@ -106,31 +106,8 @@ function App() {
 
   };
 
-  const liveFans = async () => {
-    console.log('Input value:', urlValue);
-
-    const id_part = generate_url();
-
-    if (!id_part) { // id_partがundefinedの場合の処理
-      console.error('ID part is undefined');
-      return; // 処理を中断
-    }
-
-    try {
-      let setlist = await getSetlist(id_part, isCoverChecked, selectedSite);
-      console.log('Setlist:', setlist);
-      setSetlist(setlist); // 取得したsetlistを状態に保存
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
   const handleButtonClick = () => {
-    if (selectedSite === "SetlistFM") {
-      setlistFM();
-    } else if (selectedSite === "LiveFans") {
-      liveFans();
-    }
+    feachApi();
   }
 
   const handleSiteChange = (value: string) => {
