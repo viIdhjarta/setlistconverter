@@ -1,38 +1,118 @@
 import React from 'react'
 import axios from 'axios'
+import { useState } from 'react'
+import {
+    Button,
+    Card,
+    CardBody,
+    HStack,
+    Heading,
+    Image,
+    Text,
+    VStack,
+    Container,
+    Box,
+    IconButton,
+} from '@yamada-ui/react'
+import { FiTrash2, FiEdit } from 'react-icons/fi'
 
-const ModifyButton: React.FC<{ setlistId: string, children: React.ReactNode }> = ({ setlistId, children }) => {
+type Track = {
+    id: string
+    name: string
+    imageUrl: string
+    artists: string
+}
+
+export default function ModifyButton({ setlistId, children }: { setlistId: string; children: React.ReactNode }) {
+    const [tracks, setTracks] = useState<Track[]>([])
+
     const handleClick = async () => {
+        const url = `http://localhost:3000/api/modify/${setlistId}`
 
-        const url = `http://localhost:3000/api/modify/${setlistId}`;
+        const response = await axios.get(url)
+        const length: number = response.data.body.tracks.items.length
+        const newTracks: Track[] = []
 
-        const response = await axios.get(url);
-        const length: number = response.data.body.tracks.items.length;
         for (let i = 0; i < length; i++) {
-            const artistLength: number = response.data.body.tracks.items[i].track.artists.length;
-            console.log(response.data.body.tracks.items[i].track.album.images[1].url);
-            console.log(response.data.body.tracks.items[i].track.name);
-            // アーティスト名を取得
-            let artistNames: string = '';
-            for (let j = 0; j < artistLength; j++) {
-                artistNames += (response.data.body.tracks.items[i].track.artists[j].name + (j < artistLength - 1 ? ', ' : '')); 
-            }
-            console.log(artistNames);
-        }
+            const track = response.data.body.tracks.items[i].track
+            const artistNames: string = track.artists
+                .map((artist: { name: string }) => artist.name)
+                .join(', ')
 
-        console.log(response.data.body.tracks.items[6].track);
-        return response;
+            newTracks.push({
+                id: track.id,
+                name: track.name,
+                imageUrl: track.album.images[1].url,
+                artists: artistNames,
+            })
+        }
+        setTracks(newTracks)
+        return response
+    }
+
+    const handleDelete = (id: string) => {
+        setTracks(tracks.filter(track => track.id !== id))
+        console.log(tracks)
+    }
+
+    const handleEdit = (id: string) => {
+        // 編集機能の実装（この例ではコンソールログのみ）
+        console.log(`Editing track with id: ${id}`)
     }
 
     return (
-        <button
-            onClick={handleClick}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            {children}
-        </button>
+        <VStack  align="center" width="full">
+            <Button
+                onClick={handleClick}
+                colorScheme="primary"
+                size="md"
+            >
+                {children}
+            </Button>
+
+            {tracks.length > 0 && (
+                <Container maxW="container.md">
+                    <VStack  align="stretch">
+                        {tracks.map((track) => (
+                            <Card key={track.id} variant="elevated">
+                                <CardBody>
+                                    <HStack  justifyContent="space-between">
+                                        <HStack >
+                                            <Image
+                                                src={track.imageUrl}
+                                                alt={track.name}
+                                                objectFit="cover"
+                                                boxSize="100px"
+                                                borderRadius="md"
+                                            />
+                                            <Box>
+                                                <Heading size="md" >{track.name}</Heading>
+                                                <Text fontSize="sm" color="muted" >{track.artists}</Text>
+                                            </Box>
+                                        </HStack>
+                                        <HStack>
+                                            <IconButton
+                                                aria-label="Edit track"
+                                                icon={<FiEdit />}
+                                                onClick={() => handleEdit(track.id)}
+                                                variant="ghost"
+                                                colorScheme="blue"
+                                            />
+                                            <IconButton
+                                                aria-label="Delete track"
+                                                icon={<FiTrash2 />}
+                                                onClick={() => handleDelete(track.id)}
+                                                variant="ghost"
+                                                colorScheme="red"
+                                            />
+                                        </HStack>
+                                    </HStack>
+                                </CardBody>
+                            </Card>
+                        ))}
+                    </VStack>
+                </Container>
+            )}
+        </VStack>
     )
-
 }
-
-
-export default ModifyButton
