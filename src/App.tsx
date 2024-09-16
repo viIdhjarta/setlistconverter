@@ -29,8 +29,8 @@ interface Setlist {
   setlist_id: string;
 }
 
-export async function getSetlist(setlistId: string, isCover: boolean, useSite: string): Promise<Setlist> {
-  if (useSite === "SetlistFM") {
+export async function getSetlist(setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> {
+  if (selectSite === "SetlistFM") {
     const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
     const headers = {
       "x-api-key": XAPIKEY,
@@ -42,7 +42,7 @@ export async function getSetlist(setlistId: string, isCover: boolean, useSite: s
     console.log("nowdata", response.data)
 
     return response.data;
-  } else if (useSite === "LiveFans") {
+  } else if (selectSite === "LiveFans") {
     const url = `http://localhost:3000/api/livefans/${setlistId}`;
 
     const response = await axios.get(url, { params: { isCover } });
@@ -65,6 +65,7 @@ function App() {
 
   const [isCoverChecked, { toggle: toggleCover }] = useBoolean(false)
 
+  const [errorMessage, setErrorMessage] = useState<boolean | null>(null); 
 
   const generate_url = () => {  // URLからID部分を取得　
     if (urlValue.includes("setlist.fm")) {
@@ -88,6 +89,7 @@ function App() {
 
     if (!id_part) { // id_partがundefinedの場合の処理
       console.error('ID part is undefined');
+      setErrorMessage(true);
       return; // 処理を中断
     }
 
@@ -100,6 +102,7 @@ function App() {
       setSetlist(fetchedSetlist); // 取得したsetlistを状態に保存      
     } catch (error) {
       console.error('Error:', error);
+      setErrorMessage(true);
     } finally {
       page.finish();
     }
@@ -132,7 +135,7 @@ function App() {
               <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
             </CheckboxGroup>)}
         </div>
-        <Field value={urlValue} onChange={setUrlValue} />
+        <Field  isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} />
         <br />
         <br />
         <br />
