@@ -44,11 +44,11 @@ export async function getSetlistFromSetlistFm(setlistFmId: string, isCover: bool
 }
 
 
-export async function getSetlistFromLiveFans(liveFansID: string): Promise<Setlist> {
+export async function getSetlistFromLiveFans(liveFansID: string, isCover: boolean): Promise<Setlist> {
 
   const url = `http://localhost:3000/api/livefans/${liveFansID}`;
 
-  const response = await axios.get(url);
+  const response = await axios.get(url, { params: { isCover } });
   return response.data;
 };
 
@@ -63,7 +63,7 @@ function App() {
   const [setlist, setSetlist] = useState<Setlist | null>(null); // setlistの状態を追加
 
   const [isCoverChecked, { toggle: toggleCover }] = useBoolean(false)
-  
+
 
   const generate_url = () => {  // URLからID部分を取得　
     if (urlValue.includes("setlist.fm")) {
@@ -95,7 +95,7 @@ function App() {
       let fetchedSetlist = await getSetlistFromSetlistFm(id_part, isCoverChecked);
       console.log('Setlist:', fetchedSetlist);
       console.log('isCover:', isCoverChecked);
-      
+
       setSetlist(fetchedSetlist); // 取得したsetlistを状態に保存      
     } catch (error) {
       console.error('Error:', error);
@@ -116,7 +116,7 @@ function App() {
     }
 
     try {
-      let setlist = await getSetlistFromLiveFans(id_part);
+      let setlist = await getSetlistFromLiveFans(id_part, isCoverChecked);
       console.log('Setlist:', setlist);
       setSetlist(setlist); // 取得したsetlistを状態に保存
     } catch (error) {
@@ -149,7 +149,7 @@ function App() {
           <Option value="LiveFans">LiveFans</Option>
         </Select>
         <div>
-          {selectedSite  && (
+          {selectedSite && (
             <CheckboxGroup>
               <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
             </CheckboxGroup>)}
