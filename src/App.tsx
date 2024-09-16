@@ -29,28 +29,29 @@ interface Setlist {
   setlist_id: string;
 }
 
-export async function getSetlistFromSetlistFm(setlistFmId: string, isCover: boolean): Promise<Setlist> {
-  const url = `http://localhost:3000/api/setlistfm/${setlistFmId}`;
-  const headers = {
-    "x-api-key": XAPIKEY,
-    "Accept": "application/json",
-    'Access-Control-Allow-Origin': '*'
-  };
+export async function getSetlist(setlistId: string, isCover: boolean, useSite: string): Promise<Setlist> {
+  if (useSite === "SetlistFM") {
+    const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
+    const headers = {
+      "x-api-key": XAPIKEY,
+      "Accept": "application/json",
+      'Access-Control-Allow-Origin': '*'
+    };
 
-  const response = await axios.get(url, { headers, params: { isCover } }); // クエリパラメータでisCoverとisTapeを送信
-  console.log("nowdata", response.data)
+    const response = await axios.get(url, { headers, params: { isCover } }); // クエリパラメータでisCoverとisTapeを送信
+    console.log("nowdata", response.data)
 
-  return response.data;
+    return response.data;
+  } else if (useSite === "LiveFans") {
+    const url = `http://localhost:3000/api/livefans/${setlistId}`;
+
+    const response = await axios.get(url, { params: { isCover } });
+    return response.data;
+  } else {
+    throw new Error('Invalid site');
+  }
 }
 
-
-export async function getSetlistFromLiveFans(liveFansID: string, isCover: boolean): Promise<Setlist> {
-
-  const url = `http://localhost:3000/api/livefans/${liveFansID}`;
-
-  const response = await axios.get(url, { params: { isCover } });
-  return response.data;
-};
 
 
 function App() {
@@ -92,7 +93,7 @@ function App() {
 
     try {
       page.start();
-      let fetchedSetlist = await getSetlistFromSetlistFm(id_part, isCoverChecked);
+      let fetchedSetlist = await getSetlist(id_part, isCoverChecked, selectedSite);
       console.log('Setlist:', fetchedSetlist);
       console.log('isCover:', isCoverChecked);
 
@@ -116,7 +117,7 @@ function App() {
     }
 
     try {
-      let setlist = await getSetlistFromLiveFans(id_part, isCoverChecked);
+      let setlist = await getSetlist(id_part, isCoverChecked, selectedSite);
       console.log('Setlist:', setlist);
       setSetlist(setlist); // 取得したsetlistを状態に保存
     } catch (error) {
