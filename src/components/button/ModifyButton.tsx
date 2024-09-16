@@ -12,6 +12,7 @@ type Track = {
 }
 
 export default function ModifyButton({ setlistId, children }: { setlistId: string; children: React.ReactNode }) {
+
     const [tracks, setTracks] = useState<Track[]>([])
     const [editingTrack, setEditingTrack] = useState<Track | null>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -19,6 +20,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
     const handleClick = async () => {
         const url = `http://localhost:3000/api/modify/${setlistId}`
         const response = await axios.get(url)
+        
         const length: number = response.data.body.tracks.items.length
         const newTracks: Track[] = []
 

@@ -134,13 +134,10 @@ function App() {
         <Field isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} />
         <br />
         <br />
-        <br />
-        <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button> 
-        <br />
-        <br />
-        {setlist && (
-        <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
-      )}
+        {!setlist && (
+        <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
+        )}
+
       </div>
 
       <Iframe
@@ -148,8 +145,15 @@ function App() {
         width="100%"
         height="600px"
       />
-    
-    
+      {setlist && (
+        <>
+          <br />
+          <div>セットリストに問題がある場合</div>
+          <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
+        </>
+      )}
+
+
 
 
     </>
