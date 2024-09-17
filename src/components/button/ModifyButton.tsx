@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Button, VStack, Container, useDisclosure } from '@yamada-ui/react'
 import TrackList from '../TrackList'
 import EditTrackModal from '../EditTrackModal'
+import ReplaceButton from './ReplaceButton'
 
 type Track = {
     id: string
@@ -17,6 +18,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
     const [tracks, setTracks] = useState<Track[]>([])
     const [editingTrack, setEditingTrack] = useState<Track | null>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [isReplaced, setIsReplaced] = useState<boolean>(false)
 
     const [modSongs, setModSongs] = useState<Track[]>([])
 
@@ -91,8 +93,11 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
         setTracks(prevTracks => prevTracks.map(track =>
             track.id === editingTrack?.id ? { ...song, isReplaced: true } : track
         ))
+        setIsReplaced(true)
         onClose()
     }
+
+    // const playlistRecreate = async () => {
 
     return (
         <VStack align="center" width="full">
@@ -113,6 +118,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 modSongs={modSongs}
                 onReplace={handleReplace}
             />
+            <ReplaceButton setlistId={setlistId} tracks={tracks} isReplaced={isReplaced}>{'プレイリストの再作成'} </ReplaceButton>
         </VStack>
     )
 }
