@@ -148,7 +148,7 @@ function App() {
       {setlist && (
         <>
           <br />
-          <div>セットリストに問題がある場合</div>
+          <div>セットリストに問題がある場合↓</div>
           <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
         </>
       )}

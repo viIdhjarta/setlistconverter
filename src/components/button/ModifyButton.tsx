@@ -17,10 +17,12 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
     const [editingTrack, setEditingTrack] = useState<Track | null>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
+    const [modSongs, setModSongs] = useState<Track[]>([])
+
     const handleClick = async () => {
         const url = `http://localhost:3000/api/modify/${setlistId}`
         const response = await axios.get(url)
-        
+
         const length: number = response.data.body.tracks.items.length
         const newTracks: Track[] = []
 
@@ -43,9 +45,32 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
 
     const handleDelete = (id: string) => {
         setTracks(tracks.filter(track => track.id !== id))
+        console.log(tracks)
     }
 
-    const handleEdit = (track: Track) => {
+    const handleEdit = async (track: Track) => {
+        const url = `http://localhost:3000/api/song/search/${track.artists}/${track.name}`
+        const response = await axios.get(url)
+        // modSongsにresponse.data.tracksの各種情報を追加
+        const length: number = response.data.tracks.items.length
+
+        const newModSongs: Track[] = [];
+
+        for (let i = 0; i < length; i++) {
+            const track = response.data.tracks.items[i]
+            const artistNames: string = track.artists
+                .map((artist: { name: string }) => artist.name)
+                .join(', ')
+
+            newModSongs.push({
+                id: track.id,
+                name: track.name,
+                imageUrl: track.album.images[1].url,
+                artists: artistNames,
+            })
+        }
+        setModSongs(newModSongs)        
+
         setEditingTrack(track)
         onOpen()
     }
@@ -75,6 +100,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 editingTrack={editingTrack}
                 setEditingTrack={setEditingTrack}
                 onSave={handleSaveEdit}
+                modSongs={modSongs}
             />
         </VStack>
     )

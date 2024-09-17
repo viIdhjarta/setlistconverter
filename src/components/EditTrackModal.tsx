@@ -8,9 +8,7 @@ import {
     ModalOverlay,
     Button,
     VStack,
-    FormControl,
     Label,
-    Input,
 } from '@yamada-ui/react'
 
 type Track = {
@@ -26,9 +24,10 @@ type EditTrackModalProps = {
     editingTrack: Track | null
     setEditingTrack: React.Dispatch<React.SetStateAction<Track | null>>
     onSave: () => void
+    modSongs: Track[]
 }
 
-export default function EditTrackModal({ isOpen, onClose, editingTrack, setEditingTrack, onSave }: EditTrackModalProps) {
+export default function EditTrackModal({ isOpen, onClose, editingTrack, setEditingTrack, onSave, modSongs }: EditTrackModalProps) {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
             <ModalOverlay />
@@ -37,20 +36,13 @@ export default function EditTrackModal({ isOpen, onClose, editingTrack, setEditi
             <ModalBody>
                 {editingTrack && (
                     <VStack>
-                        <FormControl>
-                            <Label>Track Name</Label>
-                            <Input
-                                value={editingTrack.name}
-                                onChange={(e) => setEditingTrack({ ...editingTrack, name: e.target.value })}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <Label>Artists</Label>
-                            <Input
-                                value={editingTrack.artists}
-                                onChange={(e) => setEditingTrack({ ...editingTrack, artists: e.target.value })}
-                            />
-                        </FormControl>
+                        {modSongs.map((song) => (
+                            <VStack key={song.id} border="1px" borderColor="gray.200" p={4} borderRadius="md" width="100%" align="start">
+                                <img src={song.imageUrl} alt={song.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                                <Label>Track Name: {song.name}</Label>
+                                <Label>Artists: {song.artists}</Label>
+                            </VStack>
+                        ))}
                     </VStack>
                 )}
             </ModalBody>
