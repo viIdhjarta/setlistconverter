@@ -1,26 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '@yamada-ui/react'
 import axios from 'axios'
+import Iframe from "react-iframe";
+import { Track } from '../../types/Track'
 
-type Track = {
-    id: string
-    name: string
-    imageUrl: string
-    artists: string
-    isReplaced?: boolean
-}
 
 const ReplaceButton: React.FC<{ setlistId: string; tracks: Track[]; children: React.ReactNode; isReplaced: boolean }> = ({ setlistId, tracks, children, isReplaced }) => {
+    const [isClick, setIsClick] = useState<boolean>(false)
+
+    const [playlistId, setPlaylistId] = useState<string | null>(null) // playlistId の状態を追加
+
     const handleClick = async () => {
         const trackIds = tracks.map(track => track.id)
         console.log(trackIds)
         const url = `http://localhost:3000/api/recreate/playlist/${setlistId}`
         const response = await axios.post(url, trackIds)
 
-        console.log(response)
+        const playlistId = response.data
 
+        setPlaylistId(playlistId) // playlistId を状態に設定
+        setIsClick(true)
 
-        return response 
+        console.log(response.data)
+
+        return response
 
 
     }
@@ -32,7 +35,13 @@ const ReplaceButton: React.FC<{ setlistId: string; tracks: Track[]; children: Re
                 {children}
             </Button>
             }
-            <div>{setlistId}</div>
+            {isClick && <Iframe
+                url={setlistId ? `https://open.spotify.com/embed/playlist/${playlistId} ` : []}
+                width="100%"
+                height="600px"
+            />}
+
+
         </>
 
     )

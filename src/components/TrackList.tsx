@@ -1,13 +1,6 @@
 import { VStack } from '@yamada-ui/react'
 import TrackItem from './TrackItem'
-
-type Track = {
-    id: string
-    name: string
-    imageUrl: string
-    artists: string
-    isReplaced?: boolean
-}
+import { Track } from '../types/Track'
 
 type TrackListProps = {
     tracks: Track[]

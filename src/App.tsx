@@ -43,6 +43,7 @@ function App() {
 
   const [errorMessage, setErrorMessage] = useState<boolean | null>(null);
 
+
   const getSetlist = async (setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> => {
     if (selectSite === "SetlistFM") {
       const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
@@ -114,6 +115,7 @@ function App() {
     setSelectedSite(value);
   }
 
+
   return (
     <>
 
@@ -135,7 +137,7 @@ function App() {
         <br />
         <br />
         {!setlist && (
-        <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
+          <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
         )}
 
       </div>
@@ -152,9 +154,6 @@ function App() {
           <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
         </>
       )}
-
-
-
 
     </>
 

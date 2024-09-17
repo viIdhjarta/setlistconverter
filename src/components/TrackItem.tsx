@@ -1,14 +1,7 @@
 // TrackItem.tsx
 import { Card, CardBody, HStack, Heading, Image, Text, Box, IconButton } from '@yamada-ui/react'
 import { FiTrash2, FiEdit } from 'react-icons/fi'
-
-type Track = {
-    id: string
-    name: string
-    imageUrl: string
-    artists: string
-    isReplaced?: boolean
-}
+import { Track } from '../types/Track'
 
 type TrackItemProps = {
     track: Track

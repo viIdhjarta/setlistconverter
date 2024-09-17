@@ -4,14 +4,7 @@ import { Button, VStack, Container, useDisclosure } from '@yamada-ui/react'
 import TrackList from '../TrackList'
 import EditTrackModal from '../EditTrackModal'
 import ReplaceButton from './ReplaceButton'
-
-type Track = {
-    id: string
-    name: string
-    imageUrl: string
-    artists: string
-    isReplaced?: boolean
-}
+import { Track } from '../../types/Track'
 
 export default function ModifyButton({ setlistId, children }: { setlistId: string; children: React.ReactNode }) {
 

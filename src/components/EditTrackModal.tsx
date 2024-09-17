@@ -12,13 +12,7 @@ import {
     IconButton 
 } from '@yamada-ui/react'
 import { FiRefreshCcw } from 'react-icons/fi' // 追加
-
-type Track = {
-    id: string
-    name: string
-    imageUrl: string
-    artists: string
-}
+import { Track } from '../types/Track'
 
 type EditTrackModalProps = {
     isOpen: boolean
