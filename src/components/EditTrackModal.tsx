@@ -9,7 +9,9 @@ import {
     Button,
     VStack,
     Label,
+    IconButton 
 } from '@yamada-ui/react'
+import { FiRefreshCcw } from 'react-icons/fi' // 追加
 
 type Track = {
     id: string
@@ -25,13 +27,14 @@ type EditTrackModalProps = {
     setEditingTrack: React.Dispatch<React.SetStateAction<Track | null>>
     onSave: () => void
     modSongs: Track[]
+    onReplace: (song: Track) => void
 }
 
-export default function EditTrackModal({ isOpen, onClose, editingTrack, setEditingTrack, onSave, modSongs }: EditTrackModalProps) {
+export default function EditTrackModal({ isOpen, onClose, editingTrack, onSave, modSongs, onReplace }: EditTrackModalProps) {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
             <ModalOverlay />
-            <ModalHeader>Edit Track</ModalHeader>
+            <ModalHeader>曲を置き換え</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
                 {editingTrack && (
@@ -41,6 +44,13 @@ export default function EditTrackModal({ isOpen, onClose, editingTrack, setEditi
                                 <img src={song.imageUrl} alt={song.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                                 <Label>Track Name: {song.name}</Label>
                                 <Label>Artists: {song.artists}</Label>
+                                <IconButton // 追加
+                                    aria-label="Replace track" // 追加
+                                    icon={<FiRefreshCcw />} // 追加
+                                    onClick={() => onReplace(song)} // 追加
+                                    variant="ghost" // 追加
+                                    colorScheme="green" // 追加
+                                />
                             </VStack>
                         ))}
                     </VStack>

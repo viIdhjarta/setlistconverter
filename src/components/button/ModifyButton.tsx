@@ -9,6 +9,7 @@ type Track = {
     name: string
     imageUrl: string
     artists: string
+    isReplaced?: boolean
 }
 
 export default function ModifyButton({ setlistId, children }: { setlistId: string; children: React.ReactNode }) {
@@ -37,6 +38,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 name: track.name,
                 imageUrl: track.album.images[1].url,
                 artists: artistNames,
+                isReplaced: false
             })
         }
         setTracks(newTracks)
@@ -67,9 +69,10 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 name: track.name,
                 imageUrl: track.album.images[1].url,
                 artists: artistNames,
+                isReplaced: false
             })
         }
-        setModSongs(newModSongs)        
+        setModSongs(newModSongs)
 
         setEditingTrack(track)
         onOpen()
@@ -82,6 +85,13 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
             ))
             onClose()
         }
+    }
+
+    const handleReplace = (song: Track) => {
+        setTracks(prevTracks => prevTracks.map(track =>
+            track.id === editingTrack?.id ? { ...song, isReplaced: true } : track
+        ))
+        onClose()
     }
 
     return (
@@ -101,6 +111,7 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 setEditingTrack={setEditingTrack}
                 onSave={handleSaveEdit}
                 modSongs={modSongs}
+                onReplace={handleReplace}
             />
         </VStack>
     )

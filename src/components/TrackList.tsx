@@ -6,6 +6,7 @@ type Track = {
     name: string
     imageUrl: string
     artists: string
+    isReplaced?: boolean
 }
 
 type TrackListProps = {
@@ -18,7 +19,7 @@ export default function TrackList({ tracks, onDelete, onEdit }: TrackListProps) 
     return (
         <VStack align="stretch">
             {tracks.map((track) => (
-                <TrackItem key={track.id} track={track} onDelete={onDelete} onEdit={onEdit} />
+                <TrackItem key={track.id} track={track}  onDelete={onDelete} onEdit={onEdit} />
             ))}
         </VStack>
     )

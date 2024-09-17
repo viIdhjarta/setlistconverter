@@ -7,6 +7,7 @@ type Track = {
     name: string
     imageUrl: string
     artists: string
+    isReplaced?: boolean
 }
 
 type TrackItemProps = {
@@ -18,9 +19,9 @@ type TrackItemProps = {
 export default function TrackItem({ track, onDelete, onEdit }: TrackItemProps) {
     return (
         <Card variant="elevated">
-            <CardBody>
+            <CardBody bg={track.isReplaced ? 'yellow.100' : 'white'}>
                 <HStack justifyContent="space-between">
-                    <HStack>
+                    <HStack >
                         <Image
                             src={track.imageUrl}
                             alt={track.name}
@@ -29,7 +30,7 @@ export default function TrackItem({ track, onDelete, onEdit }: TrackItemProps) {
                             borderRadius="md"
                         />
                         <Box>
-                            <Heading size="md">{track.name}</Heading>
+                            <Heading size="md" >{track.name}</Heading>
                             <Text fontSize="sm" color="muted">{track.artists}</Text>
                         </Box>
                     </HStack>
