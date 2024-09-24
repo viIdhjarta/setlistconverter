@@ -22,7 +22,6 @@ type EditTrackModalProps = {
     setIsReplaced: React.Dispatch<React.SetStateAction<boolean>>
     onSave: () => void
     modSongs: Track[]
-    onReplace: (song: Track) => void
 }
 
 

@@ -82,14 +82,6 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
         }
     }
 
-    const handleReplace = (song: Track) => {
-        setTracks(prevTracks => prevTracks.map(track =>
-            track.id === editingTrack?.id ? { ...song, isReplaced: true } : track
-        ))
-        setIsReplaced(true)
-        onClose()
-    }
-
 
     return (
         <VStack align="center" width="full">
@@ -109,7 +101,6 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 setIsReplaced={setIsReplaced}
                 onSave={handleSaveEdit}
                 modSongs={modSongs}
-                onReplace={handleReplace}
             />
             <ReplaceButton setlistId={setlistId} tracks={tracks} isReplaced={isReplaced}>{'プレイリストの再作成'} </ReplaceButton>
         </VStack>
