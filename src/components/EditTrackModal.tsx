@@ -18,13 +18,26 @@ type EditTrackModalProps = {
     isOpen: boolean
     onClose: () => void
     editingTrack: Track | null
-    setEditingTrack: React.Dispatch<React.SetStateAction<Track | null>>
+    setTracks: React.Dispatch<React.SetStateAction<Track[]>>
+    setIsReplaced: React.Dispatch<React.SetStateAction<boolean>>
     onSave: () => void
     modSongs: Track[]
     onReplace: (song: Track) => void
 }
 
-export default function EditTrackModal({ isOpen, onClose, editingTrack, onSave, modSongs, onReplace }: EditTrackModalProps) {
+
+
+export default function EditTrackModal({ isOpen, onClose, editingTrack, setTracks, setIsReplaced,  onSave, modSongs }: EditTrackModalProps) {
+
+    const handleReplace = (song: Track) => {
+        setTracks(prevTracks => prevTracks.map(track =>
+            track.id === editingTrack?.id ? { ...song, isReplaced: true } : track
+        ))
+        setIsReplaced(true)
+        onClose()
+    }
+
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
             <ModalOverlay />
@@ -41,7 +54,7 @@ export default function EditTrackModal({ isOpen, onClose, editingTrack, onSave, 
                                 <IconButton // 追加
                                     aria-label="Replace track" // 追加
                                     icon={<FiRefreshCcw />} // 追加
-                                    onClick={() => onReplace(song)} // 追加
+                                    onClick={() => handleReplace(song)} // 追加
                                     variant="ghost" // 追加
                                     colorScheme="green" // 追加
                                 />

@@ -12,6 +12,7 @@
   "dependencies": {
     "@hono/node-server": "^1.12.2",
     "@yamada-ui/react": "^1.5.1",
+    "@yamada-ui/table": "^1.2.3",
     "axios": "^1.7.7",
     "cheerio": "^1.0.0",
     "hono": "^4.5.11",

@@ -23,8 +23,8 @@ export default function TrackItem({ track, onDelete, onEdit }: TrackItemProps) {
                             borderRadius="md"
                         />
                         <Box>
-                            <Heading size="md" >{track.name}</Heading>
-                            <Text fontSize="sm" color="muted">{track.artists}</Text>
+                            <Heading size="sm" isTruncated>{track.name}</Heading>
+                            <Text fontSize="xs" color="muted" isTruncated>{track.artists}</Text>
                         </Box>
                     </HStack>
                     <HStack>

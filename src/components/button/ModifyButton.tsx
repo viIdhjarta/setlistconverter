@@ -90,7 +90,6 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
         onClose()
     }
 
-    // const playlistRecreate = async () => {
 
     return (
         <VStack align="center" width="full">
@@ -106,7 +105,8 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 isOpen={isOpen}
                 onClose={onClose}
                 editingTrack={editingTrack}
-                setEditingTrack={setEditingTrack}
+                setTracks={setTracks}
+                setIsReplaced={setIsReplaced}
                 onSave={handleSaveEdit}
                 modSongs={modSongs}
                 onReplace={handleReplace}
