@@ -4,7 +4,7 @@ import './App.css'
 import Field from './components/Field'
 // import Button from './components/Button'
 // import Spotify from 'react-spotify-embed'
-import ModifyButton from './components/button/modifyButton';
+import ModifyButton from './components/button/ModifyButton';
 import Iframe from "react-iframe";
 import { Checkbox, CheckboxGroup, Select, Option, useLoading, useBoolean, Button } from "@yamada-ui/react"
 import { XAPIKEY } from '../env'
