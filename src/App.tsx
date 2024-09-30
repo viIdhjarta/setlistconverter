@@ -125,32 +125,39 @@ function App() {
 
       <h1 className="text-5xl">プレイリスト作成アプリ</h1>
       <p>セットリスト投稿サイトのURLからSpotifyプレイリストを作成</p>
-      <div className="p-4">
-        <Select placeholder="サイトを選択" onChange={handleSiteChange}>
-          <Option value="SetlistFM">SetlistFM</Option>
-          <Option value="LiveFans">LiveFans</Option>
-        </Select>
-        <div>
-          {selectedSite && (
-            <CheckboxGroup>
-              <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
-            </CheckboxGroup>)}
-        </div>
-        <Field isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} />
-        <br />
-        <br />
-        {!setlist && (
-          <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
-        )}
 
-      </div>
+      {!setlist && (
+        <div className="p-4">
+          <Select placeholder="サイトを選択" onChange={handleSiteChange}>
+            <Option value="SetlistFM">SetlistFM</Option>
+            <Option value="LiveFans">LiveFans</Option>
+          </Select>
+          <div>
+            {selectedSite && (
+              <CheckboxGroup>
+                <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
+              </CheckboxGroup>)}
+          </div>
+          <Field isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} />
+          <br />
+          <br />
+          {!setlist && (
+            <Button onClick={handleButtonClick} isDisabled={(selectedSite === "") || (urlValue === "")}>プレイリストを作成</Button>
+          )}
+
+        </div>
+      )}
 
       {showIframe && setlist && (
+        <>
+        <br />
+        <br />  
         <Iframe
           url={`https://open.spotify.com/embed/playlist/${setlist.setlist_id}`}
           width="100%"
           height="600px"
         />
+        </>
       )}
 
       {setlist && (
