@@ -47,6 +47,7 @@ function App() {
   const getSetlist = async (setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> => {
     if (selectSite === "SetlistFM") {
       const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
+      // const url = `http://localhost:3000/api/setlistfm/73a8cef5`;
       const headers = {
         "x-api-key": XAPIKEY,
         "Accept": "application/json",
@@ -151,6 +152,7 @@ function App() {
         <>
           <br />
           <div>セットリストに問題がある場合↓</div>
+          {/* <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton > */}
           <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
         </>
       )}

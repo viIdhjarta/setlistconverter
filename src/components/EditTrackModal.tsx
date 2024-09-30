@@ -9,7 +9,16 @@ import {
     Button,
     VStack,
     Label,
-    IconButton 
+    IconButton,
+    Divider,
+    Card,
+    CardHeader,
+    Heading,
+    CardBody,
+    Text,
+    Box,
+    Image,
+    Flex
 } from '@yamada-ui/react'
 import { FiRefreshCcw } from 'react-icons/fi' // 追加
 import { Track } from '../types/Track'
@@ -26,7 +35,7 @@ type EditTrackModalProps = {
 
 
 
-export default function EditTrackModal({ isOpen, onClose, editingTrack, setTracks, setIsReplaced,  onSave, modSongs }: EditTrackModalProps) {
+export default function EditTrackModal({ isOpen, onClose, editingTrack, setTracks, setIsReplaced, onSave, modSongs }: EditTrackModalProps) {
 
     const handleReplace = (song: Track) => {
         setTracks(prevTracks => prevTracks.map(track =>
@@ -38,18 +47,23 @@ export default function EditTrackModal({ isOpen, onClose, editingTrack, setTrack
 
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
+        <Modal isOpen={isOpen} onClose={onClose} size='3xl'>
             <ModalOverlay />
             <ModalHeader>曲を置き換え</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
                 {editingTrack && (
-                    <VStack>
+                    <VStack divider={<Divider />}>
                         {modSongs.map((song) => (
-                            <VStack key={song.id} border="1px" borderColor="gray.200" p={4} borderRadius="md" width="100%" align="start">
-                                <img src={song.imageUrl} alt={song.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
-                                <Label>Track Name: {song.name}</Label>
-                                <Label>Artists: {song.artists}</Label>
+                            <Flex borderWidth="1px" borderRadius="lg" overflow="hidden" alignItems="center">
+                                <Image src={song.imageUrl} alt={song.name} width="50px" height="50px" objectFit="cover" />
+                                <Box ml="4" flex='1'>
+                                    <Text fontWeight="bold" fontSize="lg">
+                                        {song.name}
+                                    </Text>
+                                    <Text color="gray.500">{song.artists}</Text>
+                                </Box>
+                                <Divider orientation="vertical" height="50px" mx="1" />
                                 <IconButton // 追加
                                     aria-label="Replace track" // 追加
                                     icon={<FiRefreshCcw />} // 追加
@@ -57,7 +71,7 @@ export default function EditTrackModal({ isOpen, onClose, editingTrack, setTrack
                                     variant="ghost" // 追加
                                     colorScheme="green" // 追加
                                 />
-                            </VStack>
+                            </Flex>
                         ))}
                     </VStack>
                 )}
