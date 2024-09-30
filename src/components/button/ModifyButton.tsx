@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { Button, VStack, Container, useDisclosure } from '@yamada-ui/react'
+import { Button, VStack, Container, useDisclosure, Flex } from '@yamada-ui/react'
 import TrackList from '../TrackList'
 import EditTrackModal from '../EditTrackModal'
 import ReplaceButton from './ReplaceButton'
@@ -89,9 +89,9 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
                 {children}
             </Button>
             {tracks.length > 0 && (
-                <Container maxW="container.md">
-                    <TrackList tracks={tracks} onDelete={handleDelete} onEdit={handleEdit} />
-                </Container>
+
+                <TrackList tracks={tracks} onDelete={handleDelete} onEdit={handleEdit} />
+
             )}
             <EditTrackModal
                 isOpen={isOpen}
