@@ -43,6 +43,8 @@ function App() {
 
   const [errorMessage, setErrorMessage] = useState<boolean | null>(null);
 
+  const [showIframe, setShowIframe] = useState<boolean>(true);
+
 
   const getSetlist = async (setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> => {
     if (selectSite === "SetlistFM") {
@@ -143,17 +145,20 @@ function App() {
 
       </div>
 
-      <Iframe
-        url={setlist ? `https://open.spotify.com/embed/playlist/${setlist.setlist_id} ` : []}
-        width="100%"
-        height="600px"
-      />
+      {showIframe && setlist && (
+        <Iframe
+          url={`https://open.spotify.com/embed/playlist/${setlist.setlist_id}`}
+          width="100%"
+          height="600px"
+        />
+      )}
+
       {setlist && (
         <>
           <br />
           <div>セットリストに問題がある場合↓</div>
           {/* <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton > */}
-          <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton >
+          <ModifyButton setlistId={setlist.setlist_id} setShowIframe={setShowIframe}>{"プレイリストを修正"}</ModifyButton >
         </>
       )}
 

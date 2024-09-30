@@ -8,13 +8,10 @@ import {
     ModalOverlay,
     Button,
     VStack,
-    Label,
+
     IconButton,
     Divider,
-    Card,
-    CardHeader,
-    Heading,
-    CardBody,
+
     Text,
     Box,
     Image,

@@ -1,5 +1,5 @@
 // TrackItem.tsx
-import { Card, CardBody, HStack, Heading, Image, Text, Box, IconButton, Divider, Flex } from '@yamada-ui/react'
+import { Card, HStack,　Image, Text, Box, IconButton, Divider, Flex } from '@yamada-ui/react'
 import { FiTrash2, FiEdit } from 'react-icons/fi'
 import { Track } from '../types/Track'
 

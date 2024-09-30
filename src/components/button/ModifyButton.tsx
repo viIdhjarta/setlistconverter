@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { Button, VStack, Container, useDisclosure, Flex } from '@yamada-ui/react'
+import { Button, VStack, useDisclosure} from '@yamada-ui/react'
 import TrackList from '../TrackList'
 import EditTrackModal from '../EditTrackModal'
 import ReplaceButton from './ReplaceButton'
 import { Track } from '../../types/Track'
 
-export default function ModifyButton({ setlistId, children }: { setlistId: string; children: React.ReactNode }) {
+export default function ModifyButton({ setlistId, setShowIframe, children }: { setlistId: string; setShowIframe: React.Dispatch<React.SetStateAction<boolean>>; children: React.ReactNode }) {
 
     const [tracks, setTracks] = useState<Track[]>([])
     const [editingTrack, setEditingTrack] = useState<Track | null>(null)
@@ -16,6 +16,8 @@ export default function ModifyButton({ setlistId, children }: { setlistId: strin
     const [modSongs, setModSongs] = useState<Track[]>([])
 
     const handleClick = async () => {
+        setShowIframe(false);
+
         const url = `http://localhost:3000/api/modify/${setlistId}`
         const response = await axios.get(url)
 
