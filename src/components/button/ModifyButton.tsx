@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { Button, VStack, useDisclosure} from '@yamada-ui/react'
+import { Button, VStack, useDisclosure } from '@yamada-ui/react'
 import TrackList from '../TrackList'
 import EditTrackModal from '../EditTrackModal'
 import ReplaceButton from './ReplaceButton'
 import { Track } from '../../types/Track'
 
-export default function ModifyButton({ setlistId, setShowIframe, children }: { setlistId: string; setShowIframe: React.Dispatch<React.SetStateAction<boolean>>; children: React.ReactNode }) {
+export default function ModifyButton({ setlistId, showIframe, setShowIframe, children }: { setlistId: string; showIframe: boolean; setShowIframe: React.Dispatch<React.SetStateAction<boolean>>; children: React.ReactNode }) {
 
     const [tracks, setTracks] = useState<Track[]>([])
     const [editingTrack, setEditingTrack] = useState<Track | null>(null)
@@ -18,7 +18,9 @@ export default function ModifyButton({ setlistId, setShowIframe, children }: { s
     const handleClick = async () => {
         setShowIframe(false);
 
-        const url = `http://localhost:3000/api/modify/${setlistId}`
+        // const url = `http://localhost:3000/api/modify/${setlistId}`
+        const url = `https://setlistconverter_backend.tapioka.workers.dev/api/modify/${setlistId}`
+
         const response = await axios.get(url)
 
         const length: number = response.data.body.tracks.items.length
@@ -48,7 +50,9 @@ export default function ModifyButton({ setlistId, setShowIframe, children }: { s
     }
 
     const handleEdit = async (track: Track) => {
-        const url = `http://localhost:3000/api/song/search/${track.artists}/${track.name}`
+        // const url = `http://localhost:3000/api/song/search/${track.artists}/${track.name}`
+        const url = `https://setlistconverter_backend.tapioka.workers.dev/api/song/search/${track.artists}/${track.name}`
+
         const response = await axios.get(url)
         // modSongsにresponse.data.tracksの各種情報を追加
         const length: number = response.data.tracks.items.length
@@ -87,14 +91,15 @@ export default function ModifyButton({ setlistId, setShowIframe, children }: { s
 
     return (
         <VStack align="center" width="full">
+
             <Button onClick={handleClick} colorScheme="primary" size="md">
                 {children}
             </Button>
+
             {tracks.length > 0 && (
-
                 <TrackList tracks={tracks} onDelete={handleDelete} onEdit={handleEdit} />
-
             )}
+
             <EditTrackModal
                 isOpen={isOpen}
                 onClose={onClose}

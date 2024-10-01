@@ -13,7 +13,9 @@ const ReplaceButton: React.FC<{ setlistId: string; tracks: Track[]; children: Re
     const handleClick = async () => {
         const trackIds = tracks.map(track => track.id)
         console.log(trackIds)
-        const url = `http://localhost:3000/api/recreate/playlist/${setlistId}`
+        // const url = `http://localhost:3000/api/recreate/playlist/${setlistId}`
+        const url = `https://setlistconverter_backend.tapioka.workers.dev/api/recreate/playlist/${setlistId}`
+
         const response = await axios.post(url, trackIds)
 
         const playlistId = response.data

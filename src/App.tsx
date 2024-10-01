@@ -48,8 +48,9 @@ function App() {
 
   const getSetlist = async (setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> => {
     if (selectSite === "SetlistFM") {
-      const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
-      // const url = `http://localhost:3000/api/setlistfm/73a8cef5`;
+      // const url = `http://localhost:3000/api/setlistfm/${setlistId}`;
+      const url = `https://setlistconverter_backend.tapioka.workers.dev/api/setlistfm/${setlistId}`;
+      
       const headers = {
         "x-api-key": XAPIKEY,
         "Accept": "application/json",
@@ -60,7 +61,8 @@ function App() {
 
       return response.data;
     } else if (selectSite === "LiveFans") {
-      const url = `http://localhost:3000/api/livefans/${setlistId}`;
+      // const url = `http://localhost:3000/api/livefans/${setlistId}`;
+      const url = `https://setlistconverter_backend.tapioka.workers.dev/api/livefans/${setlistId}`;
 
       const response = await axios.get(url, { params: { isCover } });
       return response.data;
@@ -165,7 +167,7 @@ function App() {
           <br />
           <div>セットリストに問題がある場合↓</div>
           {/* <ModifyButton setlistId={setlist.setlist_id}>{"プレイリストを修正"}</ModifyButton > */}
-          <ModifyButton setlistId={setlist.setlist_id} setShowIframe={setShowIframe}>{"プレイリストを修正"}</ModifyButton >
+          <ModifyButton setlistId={setlist.setlist_id} showIframe={showIframe} setShowIframe={setShowIframe}>{"プレイリストを修正"}</ModifyButton >
         </>
       )}
 

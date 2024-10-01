@@ -12,40 +12,7 @@ type TrackItemProps = {
 export default function TrackItem({ track, onDelete, onEdit }: TrackItemProps) {
     return (
         <Card variant="elevated">
-            {/* <CardBody bg={track.isReplaced ? 'yellow.100' : 'white'}>
-                <HStack justifyContent="space-between">
-                    <HStack >
-                        <Image
-                            src={track.imageUrl}
-                            alt={track.name}
-                            objectFit="cover"
-                            boxSize="100px"
-                            borderRadius="md"
-                        />
-                        <Box>
-                            <Heading size="sm" isTruncated>{track.name}</Heading>
-                            <Text fontSize="xs" color="muted" isTruncated>{track.artists}</Text>
-                        </Box>
-                    </HStack>
-                    <HStack>
-                        <IconButton
-                            aria-label="Edit track"
-                            icon={<FiEdit />}
-                            onClick={() => onEdit(track)}
-                            variant="ghost"
-                            colorScheme="blue"
-                        />
-                        <IconButton
-                            aria-label="Delete track"
-                            icon={<FiTrash2 />}
-                            onClick={() => onDelete(track.id)}
-                            variant="ghost"
-                            colorScheme="red"
-                        />
-                    </HStack>
-                </HStack>
-            </CardBody> */}
-            <Flex borderWidth="1px" borderRadius="lg" overflow="hidden" alignItems="center">
+            <Flex borderWidth="1px" borderRadius="lg" overflow="hidden" alignItems="center" bg={track.isReplaced ? 'yellow.100' : 'white'}>
                 <Image src={track.imageUrl} alt={track.name} width="50px" height="50px" objectFit="cover" />
                 <Box ml="4" flex='1'>
                     <Text fontWeight="bold" fontSize="lg">
