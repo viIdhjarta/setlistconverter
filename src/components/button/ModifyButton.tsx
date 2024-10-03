@@ -6,7 +6,7 @@ import EditTrackModal from '../EditTrackModal'
 import ReplaceButton from './ReplaceButton'
 import { Track } from '../../types/Track'
 
-export default function ModifyButton({ setlistId, showIframe, setShowIframe, children }: { setlistId: string; showIframe: boolean; setShowIframe: React.Dispatch<React.SetStateAction<boolean>>; children: React.ReactNode }) {
+export default function ModifyButton({ setlistId, setShowIframe, children }: { setlistId: string; setShowIframe: React.Dispatch<React.SetStateAction<boolean>>; children: React.ReactNode }) {
 
     const [tracks, setTracks] = useState<Track[]>([])
     const [editingTrack, setEditingTrack] = useState<Track | null>(null)
@@ -20,14 +20,16 @@ export default function ModifyButton({ setlistId, showIframe, setShowIframe, chi
 
         // const url = `http://localhost:3000/api/modify/${setlistId}`
         const url = `https://setlistconverter_backend.tapioka.workers.dev/api/modify/${setlistId}`
+        
 
         const response = await axios.get(url)
+        console.log(response)
 
-        const length: number = response.data.body.tracks.items.length
+        const length: number = response.data.tracks.items.length
         const newTracks: Track[] = []
 
         for (let i = 0; i < length; i++) {
-            const track = response.data.body.tracks.items[i].track
+            const track = response.data.tracks.items[i].track
             const artistNames: string = track.artists
                 .map((artist: { name: string }) => artist.name)
                 .join(', ')
