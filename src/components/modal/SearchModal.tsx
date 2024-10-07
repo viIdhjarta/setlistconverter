@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     Modal,
     ModalBody,
@@ -17,8 +16,7 @@ import {
     Image,
     Flex
 } from '@yamada-ui/react'
-import { FiRefreshCcw } from 'react-icons/fi' // 追加
-import { Track } from '../../types/Track'
+import { FiPlus } from 'react-icons/fi' // 追加
 
 type EditTrackModalProps = {
     isOpen: boolean
@@ -31,6 +29,19 @@ type EditTrackModalProps = {
 
 export default function SearchModal({ isOpen, onClose, artistName, data }: EditTrackModalProps) {
 
+    const handleClick = async (id: string) => {
+
+        const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/musicbrainz/search?q=${encodeURIComponent(id)}`);
+        const data = await response.json();
+
+        const country: string = data.country;
+
+        if (country === "JP") {
+            // livefansでプレイリストを作成
+            console.log("日本のアーティストです")
+        }
+    }
+
 
 
     return (
@@ -40,23 +51,31 @@ export default function SearchModal({ isOpen, onClose, artistName, data }: EditT
             <ModalCloseButton />
             <ModalBody>
                 {data && data.artists && (
-                    <VStack align="stretch" >
+                    <VStack align="stretch" divider={<Divider />}>
                         {data.artists.items.map((artist: any) => (
-                            <Box key={artist.id}>
-                                <Text fontWeight="bold">{artist.name}</Text>
-                                {artist.images && artist.images[0] && (
-                                    <Image src={artist.images[0].url} alt={artist.name} boxSize="100px" objectFit="cover" />
-                                )}
-                            </Box>
+                            <Flex key={artist.id} alignItems="center" justifyContent="space-between" >
+
+                                <Box key={artist.id}>
+                                    <Text fontWeight="bold">{artist.name}</Text>
+                                    {artist.images && artist.images[0] && (
+                                        <Image src={artist.images[0].url} alt={artist.name} boxSize="70px" objectFit="cover" />
+                                    )}
+                                </Box>
+
+                                <IconButton
+                                    aria-label="Replace track"
+                                    icon={<FiPlus />}
+                                    onClick={() => handleClick(artist.id)}
+                                    variant="ghost"
+                                    colorScheme="green"
+                                />
+                            </Flex>
                         ))}
                     </VStack>
                 )}
             </ModalBody>
             <ModalFooter>
-                <Button colorScheme="blue" mr={3} >
-                    Save
-                </Button>
-                <Button variant="ghost" onClick={onClose}>Cancel</Button>
+                <Button colorScheme="yellow" variant="ghost" onClick={onClose}>Cancel</Button>
             </ModalFooter>
         </Modal>
     )
