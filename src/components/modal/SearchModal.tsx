@@ -10,7 +10,7 @@ import {
 
     IconButton,
     Divider,
-
+    useLoading,
     Text,
     Box,
     Image,
@@ -29,17 +29,23 @@ type EditTrackModalProps = {
 
 export default function SearchModal({ isOpen, onClose, artistName, data }: EditTrackModalProps) {
 
+    const { page } = useLoading();
+
     const handleClick = async (id: string) => {
+
+        page.start();
 
         const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/musicbrainz/search?q=${encodeURIComponent(id)}`);
         const data = await response.json();
 
         const country: string = data.country;
-
         if (country === "JP") {
             // livefansでプレイリストを作成
             console.log("日本のアーティストです")
+        } else {
+            console.log("日本のアーティストではありません")
         }
+        page.finish();
     }
 
 
