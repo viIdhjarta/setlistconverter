@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { Button, VStack, useDisclosure } from '@yamada-ui/react'
 import TrackList from '../TrackList'
-import EditTrackModal from '../EditTrackModal'
+import EditTrackModal from '../modal/EditTrackModal'
 import ReplaceButton from './ReplaceButton'
 import { Track } from '../../types/Track'
 

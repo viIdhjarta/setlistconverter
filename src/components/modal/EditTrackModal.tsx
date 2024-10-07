@@ -18,7 +18,7 @@ import {
     Flex
 } from '@yamada-ui/react'
 import { FiRefreshCcw } from 'react-icons/fi' // 追加
-import { Track } from '../types/Track'
+import { Track } from '../../types/Track'
 
 type EditTrackModalProps = {
     isOpen: boolean

@@ -2,12 +2,18 @@ import { useState } from 'react';
 import {
     FormControl,
     Input,
+    useDisclosure
 } from "@yamada-ui/react"
 import { Button } from "@yamada-ui/react"
+import SearchModal from '../components/modal/SearchModal';
 
 function ArtistPlaylist() {
     const [artistName, setArtistName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [data, setData] = useState<any>(null);
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,6 +26,8 @@ function ArtistPlaylist() {
             }
             const data = await response.json();
             console.log('API応答:', data);
+            setData(data)
+            onOpen()
             // ここでデータを処理します
         } catch (error) {
             console.error('エラー:', error);
@@ -39,6 +47,8 @@ function ArtistPlaylist() {
                 <br />
                 <Button type="submit" isDisabled={artistName === ''}> {isLoading ? '検索中...' : '検索'}</Button>
             </form>
+
+            <SearchModal isOpen={isOpen} onClose={onClose} artistName={artistName} data={data} />
         </div>
     );
 }
