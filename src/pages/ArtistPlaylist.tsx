@@ -28,7 +28,7 @@ function ArtistPlaylist() {
             console.log('API応答:', data);
             setData(data)
             onOpen()
-            // ここでデータを処理します
+            
         } catch (error) {
             console.error('エラー:', error);
             
