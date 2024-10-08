@@ -14,8 +14,13 @@ function App() {
 }
 
 function AppContent() {
+
+
+
   const location = useLocation()
   const isHomePage = location.pathname === "/"
+
+
 
   return (
     <Box minHeight="100vh" p={8}>

@@ -31,21 +31,26 @@ export default function SearchModal({ isOpen, onClose, artistName, data }: EditT
 
     const { page } = useLoading();
 
-    const handleClick = async (id: string) => {
+    const handleClick = async (artist: any) => {
 
-        page.start();
+        // page.start();
 
-        const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/musicbrainz/search?q=${encodeURIComponent(id)}`);
+        const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/musicbrainz/search?q=${encodeURIComponent(artist.id)}`);
         const data = await response.json();
 
         const country: string = data.country;
         if (country === "JP") {
             // livefansでプレイリストを作成
             console.log("日本のアーティストです")
+            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html?artist=${encodeURIComponent(artist.name)}`);
+            const html = await response.text();
+            console.log(html);
+
+
         } else {
             console.log("日本のアーティストではありません")
         }
-        page.finish();
+        // page.finish();
     }
 
 
@@ -71,7 +76,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data }: EditT
                                 <IconButton
                                     aria-label="Replace track"
                                     icon={<FiPlus />}
-                                    onClick={() => handleClick(artist.id)}
+                                    onClick={() => handleClick(artist)}
                                     variant="ghost"
                                     colorScheme="green"
                                 />
