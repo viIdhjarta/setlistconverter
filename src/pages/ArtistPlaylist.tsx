@@ -2,18 +2,25 @@ import { useState } from 'react';
 import {
     FormControl,
     Input,
-    useDisclosure
+    useDisclosure,
+    Select,
+    Option
 } from "@yamada-ui/react"
 import { Button } from "@yamada-ui/react"
 import SearchModal from '../components/modal/SearchModal';
 
 function ArtistPlaylist() {
     const [artistName, setArtistName] = useState('');
+    const [selectedSite, setSelectedSite] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<any>(null);
 
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const handleSiteChange = (value: string) => {
+        setSelectedSite(value);
+    }
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,10 +35,10 @@ function ArtistPlaylist() {
             console.log('API応答:', data);
             setData(data)
             onOpen()
-            
+
         } catch (error) {
             console.error('エラー:', error);
-            
+
         } finally {
             setIsLoading(false);
         }
@@ -41,14 +48,18 @@ function ArtistPlaylist() {
         <div>
             {/* <h1>アーティスト名からプレイリスト作成</h1> */}
             <form onSubmit={handleSubmit}>
+                <Select placeholder="サイトを選択" onChange={handleSiteChange}>
+                    <Option value="setlistfm">SetlistFM</Option>
+                    <Option value="livefans">LiveFans</Option>
+                </Select>
                 <FormControl label="アーティスト名を入力してください">
                     <Input type="text" placeholder="アーティスト名" onChange={(e) => setArtistName(e.target.value)} />
                 </FormControl>
                 <br />
-                <Button type="submit" isDisabled={artistName === ''}> {isLoading ? '検索中...' : '検索'}</Button>
+                <Button type="submit" isDisabled={(artistName === '') || (selectedSite === '')}> {isLoading ? '検索中...' : '検索'}</Button>
             </form>
 
-            <SearchModal isOpen={isOpen} onClose={onClose} artistName={artistName} data={data} />
+            <SearchModal isOpen={isOpen} onClose={onClose} artistName={artistName} data={data} selectedSite={selectedSite} />
         </div>
     );
 }
