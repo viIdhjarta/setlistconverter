@@ -48,22 +48,54 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
 
     const handleClick = async (artist: any) => {
-        onClose()
-        page.start()
+        if (selectedSite === "setlistfm") {
+            onClose()
+            page.start()
 
-        const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
-        const fetchedSetlists: Setlist[] = await response.json()
+            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
+            const data = await response.json()
 
-        setSetlists(fetchedSetlists)
+            let fetchedSetlists: Setlist[] = []
+
+            if (data.setlist && Array.isArray(data.setlist)) {
+                fetchedSetlists = data.setlist.map((item: any) => ({
+                    concert_name: item.tour?.name || item.artist.name,
+                    date: item.eventDate,
+                    venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
+                    concert_id: item.id
+                }))
+            }
+
+            console.log(fetchedSetlists)
+            setSetlists(fetchedSetlists)
 
 
-        page.finish()
+            console.log(data)
+
+            page.finish()
+        } else if (selectedSite === "livefans") {
+            onClose()
+            page.start()
+
+            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
+            const fetchedSetlists: Setlist[] = await response.json()
+
+            setSetlists(fetchedSetlists)
+
+
+            page.finish()
+
+        }
     }
 
     const handleSetlistSelect = (setlist: Setlist) => {
         setSelectedSetlist(setlist)
         console.log(setlist.concert_id)
         onConfirmOpen()
+    }
+
+    const viewSongInfo = (setlist: Setlist) => {
+        console.log(setlist)
     }
 
 
@@ -114,6 +146,14 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                     <Text>会場: {setlist.venue}</Text>
                                 </CardBody>
                                 <CardFooter>
+                                    {selectedSite === "setlistfm" && (
+                                        <Button
+                                            colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
+                                            onClick={() => viewSongInfo(setlist)}
+                                        >
+                                            詳細を見る
+                                        </Button>
+                                    )}
                                     <Button
                                         colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
                                         onClick={() => handleSetlistSelect(setlist)}
@@ -128,7 +168,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                 </Box>
             )}
             {selectedSetlist && (
-                <ConfirmModal isOpen={isConfirmOpen} onClose={onConfirmClose} setlist_id={selectedSetlist.concert_id} />
+                <ConfirmModal isOpen={isConfirmOpen} onClose={onConfirmClose} setlist_id={selectedSetlist.concert_id} selectedSite={selectedSite} />
             )}
         </>
     )

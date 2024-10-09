@@ -14,10 +14,11 @@ type ConfirmModalProps = {
     isOpen: boolean
     onClose: () => void
     setlist_id: string
+    selectedSite: string
 }
 
 
-export default function ConfirmModal({ isOpen, onClose, setlist_id }: ConfirmModalProps) {
+export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite }: ConfirmModalProps) {
 
     const [setlist, setSetlist] = useState<any>(null)
 
@@ -25,7 +26,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id }: ConfirmMod
         console.log("プレイリストを作成します")
         console.log(setlist_id)
         onClose()
-        const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/livefans/${setlist_id}`;
+        const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/${selectedSite}/${setlist_id}`;
         console.log(url)
 
         const response = await fetch(url);
