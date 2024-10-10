@@ -7,6 +7,7 @@ import {
     ModalHeader,
     ModalOverlay,
     Button,
+    useLoading
 } from '@yamada-ui/react'
 import Iframe from "react-iframe";
 
@@ -22,8 +23,13 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
 
     const [setlist, setSetlist] = useState<any>(null)
 
+    const { page } = useLoading()
+
     const handleClick = async () => {
+
+        page.start()
         console.log("プレイリストを作成します")
+
         console.log(setlist_id)
         onClose()
         const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/${selectedSite}/${setlist_id}`;
@@ -33,6 +39,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
         const data = await response.json()
         setSetlist(data)
         console.log(data)
+        page.finish()
     }
 
     return (

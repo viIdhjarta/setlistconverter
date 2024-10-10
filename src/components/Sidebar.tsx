@@ -34,7 +34,7 @@ function Sidebar() {
                         <Button
                             as={Link}
                             to="/url"
-                            variant={location.pathname === "/url" ? "solid" : "ghost"}
+                            variant={location.pathname === "setlistconverter/url" ? "solid" : "ghost"}
                             justifyContent="flex-start"
                             onClick={onClose}
                         >
@@ -43,7 +43,7 @@ function Sidebar() {
                         <Button
                             as={Link}
                             to="/artist"
-                            variant={location.pathname === "/artist" ? "solid" : "ghost"}
+                            variant={location.pathname === "setlistconverter/artist" ? "solid" : "ghost"}
                             justifyContent="flex-start"
                             onClick={onClose}
                         >

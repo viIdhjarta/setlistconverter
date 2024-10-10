@@ -41,8 +41,10 @@ type Setlist = {
 
 export default function SearchModal({ isOpen, onClose, artistName, data, selectedSite }: EditTrackModalProps) {
     const { page } = useLoading()
+
     const [setlists, setSetlists] = useState<Setlist[]>([])
     const [selectedSetlist, setSelectedSetlist] = useState<Setlist | null>(null)
+
 
     const { isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose } = useDisclosure()
 
@@ -55,23 +57,23 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
             const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
             const data = await response.json()
 
+            console.log(data)
             let fetchedSetlists: Setlist[] = []
 
             if (data.setlist && Array.isArray(data.setlist)) {
-                fetchedSetlists = data.setlist.map((item: any) => ({
-                    concert_name: item.tour?.name || item.artist.name,
-                    date: item.eventDate,
-                    venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
-                    concert_id: item.id
-                }))
+                data.setlist.map((item: any) => {
+                    if (item.sets && item.sets.set && item.sets.set.length > 0) {
+                        fetchedSetlists.push({
+                            concert_name: item.tour?.name || item.artist.name,
+                            date: item.eventDate,
+                            venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
+                            concert_id: item.id
+                        })
+                    }
+                })
             }
 
-            console.log(fetchedSetlists)
             setSetlists(fetchedSetlists)
-
-
-            console.log(data)
-
             page.finish()
         } else if (selectedSite === "livefans") {
             onClose()
@@ -145,7 +147,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                     <Text>日付: {setlist.date}</Text>
                                     <Text>会場: {setlist.venue}</Text>
                                 </CardBody>
-                                <CardFooter>
+                                <CardFooter justifyContent="flex-end" gap={2}>
                                     {selectedSite === "setlistfm" && (
                                         <Button
                                             colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
@@ -154,6 +156,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                             詳細を見る
                                         </Button>
                                     )}
+
                                     <Button
                                         colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
                                         onClick={() => handleSetlistSelect(setlist)}
