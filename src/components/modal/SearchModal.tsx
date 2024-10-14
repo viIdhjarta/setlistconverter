@@ -15,14 +15,18 @@ import {
     Box,
     Image,
     Flex,
-    Card,
-    CardBody,
-    CardFooter,
+    GridItem,
     SimpleGrid,
-    useDisclosure
+    useDisclosure,
+    Accordion,
+    AccordionItem,
+    AccordionLabel,
+    AccordionPanel
 } from '@yamada-ui/react'
 import { FiPlus, FiCheck } from 'react-icons/fi'
 import ConfirmModal from './ConfirmModal'
+
+
 
 type EditTrackModalProps = {
     isOpen: boolean
@@ -37,6 +41,7 @@ type Setlist = {
     date: string
     venue: string
     concert_id: string,
+    song: []
 }
 
 export default function SearchModal({ isOpen, onClose, artistName, data, selectedSite }: EditTrackModalProps) {
@@ -67,7 +72,8 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                             concert_name: item.tour?.name || item.artist.name,
                             date: item.eventDate,
                             venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
-                            concert_id: item.id
+                            concert_id: item.id,
+                            song: item.sets.set[0].song
                         })
                     }
                 })
@@ -95,11 +101,6 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
         console.log(setlist.concert_id)
         onConfirmOpen()
     }
-
-    const viewSongInfo = (setlist: Setlist) => {
-        console.log(setlist)
-    }
-
 
     return (
         <>
@@ -139,33 +140,39 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
             {setlists.length > 0 && (
                 <Box mt={6}>
                     <Text fontWeight="bold" mb={4}>セットリストを選択してください：</Text>
-                    <SimpleGrid columns={2} >
+                    <SimpleGrid  gap="md">
+                        {/* <SimpleGrid columns={2}> */}
                         {setlists.map((setlist) => (
-                            <Card key={setlist.concert_id} variant="outline">
-                                <CardBody>
-                                    <Text fontWeight="bold">{setlist.concert_name}</Text>
-                                    <Text>日付: {setlist.date}</Text>
-                                    <Text>会場: {setlist.venue}</Text>
-                                </CardBody>
-                                <CardFooter justifyContent="flex-end" gap={2}>
-                                    {selectedSite === "setlistfm" && (
-                                        <Button
-                                            colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
-                                            onClick={() => viewSongInfo(setlist)}
-                                        >
-                                            詳細を見る
-                                        </Button>
-                                    )}
 
-                                    <Button
-                                        colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
-                                        onClick={() => handleSetlistSelect(setlist)}
-                                        leftIcon={selectedSetlist?.concert_id === setlist.concert_id ? <FiCheck /> : undefined}
-                                    >
-                                        {selectedSetlist?.concert_id === setlist.concert_id ? "選択中" : "選択"}
-                                    </Button>
-                                </CardFooter>
-                            </Card>
+                            <Accordion isToggle key={setlist.concert_id}>
+                                <AccordionItem>
+                                    <AccordionLabel>
+                                        <SimpleGrid w="full"  gap="md">
+                                            <GridItem>
+                                                <Text fontWeight="bold">{setlist.concert_name}</Text>
+                                                <Text>日付: {setlist.date}</Text>
+                                                <Text>会場: {setlist.venue}</Text>
+                                                <GridItem textAlign="right">
+                                                    <Button
+                                                        colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
+                                                        onClick={() => handleSetlistSelect(setlist)}
+                                                        leftIcon={selectedSetlist?.concert_id === setlist.concert_id ? <FiCheck /> : undefined}
+                                                    >
+                                                        {selectedSetlist?.concert_id === setlist.concert_id ? "選択中" : "選択"}
+                                                    </Button>
+                                                </GridItem>
+                                            </GridItem> 
+                                        </SimpleGrid>
+                                    </AccordionLabel>
+                                    <AccordionPanel>
+                                        {setlist.song.map((song: any) =>
+                                            <div>{song.name}</div>
+                                        )}
+                                    </AccordionPanel>
+                                </AccordionItem>
+                            </Accordion>
+
+
                         ))}
                     </SimpleGrid>
                 </Box>

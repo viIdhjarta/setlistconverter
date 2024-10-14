@@ -31,8 +31,8 @@ function AppContent() {
         </Heading>
       )}
       <Routes>
-        <Route path="setlistconverter/url" element={<UrlPlaylist />} />
-        <Route path="setlistconverter/artist" element={<ArtistPlaylist />} />
+        <Route path="/url" element={<UrlPlaylist />} />
+        <Route path="/artist" element={<ArtistPlaylist />} />
       </Routes>
     </Box>
   )
