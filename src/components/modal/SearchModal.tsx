@@ -111,13 +111,12 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                 <ModalBody>
                     {data && data.artists && (
                         <VStack align="stretch" divider={<Divider />}>
-                            {data.artists.items.map((artist: any) => (
+                            {data.artists.items.filter((artist: any) => artist.images && artist.images[0]).map((artist: any) => (
                                 <Flex key={artist.id} alignItems="center" justifyContent="space-between">
-                                    <Box>
+                                    <Box display="flex" alignItems="center" gap="20px">
+                                        <Image src={artist.images[0].url} alt={artist.name} boxSize="70px" objectFit="cover" />
                                         <Text fontWeight="bold">{artist.name}</Text>
-                                        {artist.images && artist.images[0] && (
-                                            <Image src={artist.images[0].url} alt={artist.name} boxSize="70px" objectFit="cover" />
-                                        )}
+
                                     </Box>
                                     <IconButton
                                         aria-label="Replace track"
@@ -140,14 +139,14 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
             {setlists.length > 0 && (
                 <Box mt={6}>
                     <Text fontWeight="bold" mb={4}>セットリストを選択してください：</Text>
-                    <SimpleGrid  gap="md">
+                    <SimpleGrid gap="md">
                         {/* <SimpleGrid columns={2}> */}
                         {setlists.map((setlist) => (
 
                             <Accordion isToggle key={setlist.concert_id}>
                                 <AccordionItem>
                                     <AccordionLabel>
-                                        <SimpleGrid w="full"  gap="md">
+                                        <SimpleGrid w="full" gap="md">
                                             <GridItem>
                                                 <Text fontWeight="bold">{setlist.concert_name}</Text>
                                                 <Text>日付: {setlist.date}</Text>
@@ -161,7 +160,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                                         {selectedSetlist?.concert_id === setlist.concert_id ? "選択中" : "選択"}
                                                     </Button>
                                                 </GridItem>
-                                            </GridItem> 
+                                            </GridItem>
                                         </SimpleGrid>
                                     </AccordionLabel>
                                     <AccordionPanel>
