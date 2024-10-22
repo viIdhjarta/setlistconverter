@@ -33,6 +33,15 @@ function Sidebar() {
                     <VStack align="stretch">
                         <Button
                             as={Link}
+                            to="/artist"
+                            variant={location.pathname === "/artist" ? "solid" : "ghost"}
+                            justifyContent="flex-start"
+                            onClick={onClose}
+                        >
+                            アーティスト名から検索
+                        </Button>
+                        <Button
+                            as={Link}
                             to="/url"
                             variant={location.pathname === "/url" ? "solid" : "ghost"}
                             justifyContent="flex-start"
@@ -40,15 +49,7 @@ function Sidebar() {
                         >
                             URLから作成
                         </Button>
-                        <Button
-                            as={Link}
-                            to="/artist"
-                            variant={location.pathname === "/artist" ? "solid" : "ghost"}
-                            justifyContent="flex-start"
-                            onClick={onClose}
-                        >
-                            アーティスト名から作成
-                        </Button>
+
                     </VStack>
                 </DrawerBody>
 

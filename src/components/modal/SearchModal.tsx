@@ -182,7 +182,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                         </SimpleGrid>
                                     </AccordionLabel>
                                     <AccordionPanel>
-                                        {setlist.song.map((song: any, index: number) => (
+                                        {setlist.song?.map((song: any, index: number) => (
                                             <div key={`${setlist.concert_id}-${index}`}>{song.name}</div>
                                         ))}
                                     </AccordionPanel>
