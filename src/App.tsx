@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { Box, Heading } from "@yamada-ui/react"
 import './App.css'
 import Sidebar from './components/Sidebar'
@@ -7,7 +7,7 @@ import ArtistPlaylist from './pages/ArtistPlaylist'
 
 function App() {
   return (
-    <Router>
+    <Router basename="/setlistconverter">
       <AppContent />
     </Router>
   )
@@ -31,6 +31,7 @@ function AppContent() {
         </Heading>
       )}
       <Routes>
+        <Route path="/" element={<Navigate to="/artist" replace />} />
         <Route path="/url" element={<UrlPlaylist />} />
         <Route path="/artist" element={<ArtistPlaylist />} />
       </Routes>
