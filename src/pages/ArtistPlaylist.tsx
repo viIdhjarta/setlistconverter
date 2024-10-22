@@ -45,22 +45,24 @@ function ArtistPlaylist() {
     };
 
     return (
-        <div>
-            {/* <h1>アーティスト名からプレイリスト作成</h1> */}
-            <form onSubmit={handleSubmit}>
-                <Select placeholder="サイトを選択" onChange={handleSiteChange}>
-                    <Option value="setlistfm">SetlistFM</Option>
-                    <Option value="livefans">LiveFans</Option>
-                </Select>
-                <FormControl label="アーティスト名を入力してください">
-                    <Input type="text" placeholder="アーティスト名" onChange={(e) => setArtistName(e.target.value)} />
-                </FormControl>
-                <br />
-                <Button type="submit" isDisabled={(artistName === '') || (selectedSite === '')}> {isLoading ? '検索中...' : '検索'}</Button>
-            </form>
+        <>
+            <div>
+                {/* <h1>アーティスト名からプレイリスト作成</h1> */}
+                <form onSubmit={handleSubmit}>
+                    <Select placeholder="サイトを選択" onChange={handleSiteChange}>
+                        <Option value="setlistfm">SetlistFM</Option>
+                        <Option value="livefans">LiveFans</Option>
+                    </Select>
+                    <FormControl label="アーティスト名を入力してください">
+                        <Input type="text" placeholder="アーティスト名" onChange={(e) => setArtistName(e.target.value)} />
+                    </FormControl>
+                    <br />
+                    <Button type="submit" isDisabled={(artistName === '') || (selectedSite === '')}> {isLoading ? '検索中...' : '検索'}</Button>
+                </form>
 
-            <SearchModal isOpen={isOpen} onClose={onClose} artistName={artistName} data={data} selectedSite={selectedSite} />
-        </div>
+                <SearchModal isOpen={isOpen} onClose={onClose} artistName={artistName} data={data} selectedSite={selectedSite} />
+            </div>
+        </>
     );
 }
 

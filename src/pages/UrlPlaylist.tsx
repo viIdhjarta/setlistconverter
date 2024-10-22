@@ -125,7 +125,7 @@ function UrlPlaylist() {
             <h1 className="text-5xl">プレイリスト作成アプリ</h1>
             <p>セットリスト投稿サイトのURLからSpotifyプレイリストを作成</p>
 
-            
+
 
             {!setlist && (
                 <div className="p-4">
@@ -139,7 +139,7 @@ function UrlPlaylist() {
                                 <Checkbox defaultChecked={true} isChecked={isCoverChecked} onChange={toggleCover}>カバー曲を除外</Checkbox>
                             </CheckboxGroup>)}
                     </div>
-                    <Field isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} label="URLを入力"/>
+                    <Field isInvalid={errorMessage !== null} value={urlValue} onChange={setUrlValue} placeholder={selectedSite} label="URLを入力" />
                     <br />
                     <br />
                     {!setlist && (

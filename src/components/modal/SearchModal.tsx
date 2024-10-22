@@ -21,7 +21,8 @@ import {
     Accordion,
     AccordionItem,
     AccordionLabel,
-    AccordionPanel
+    AccordionPanel,
+    useNotice
 } from '@yamada-ui/react'
 import { FiPlus, FiCheck } from 'react-icons/fi'
 import ConfirmModal from './ConfirmModal'
@@ -47,6 +48,8 @@ type Setlist = {
 export default function SearchModal({ isOpen, onClose, artistName, data, selectedSite }: EditTrackModalProps) {
     const { page } = useLoading()
 
+    const notice = useNotice()
+
     const [setlists, setSetlists] = useState<Setlist[]>([])
     const [selectedSetlist, setSelectedSetlist] = useState<Setlist | null>(null)
 
@@ -55,45 +58,60 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
 
     const handleClick = async (artist: any) => {
-        if (selectedSite === "setlistfm") {
-            onClose()
-            page.start()
 
-            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
-            const data = await response.json()
+        try {
+            if (selectedSite === "setlistfm") {
 
-            console.log(data)
-            let fetchedSetlists: Setlist[] = []
+                onClose()
+                page.start()
 
-            if (data.setlist && Array.isArray(data.setlist)) {
-                data.setlist.map((item: any) => {
-                    if (item.sets && item.sets.set && item.sets.set.length > 0) {
-                        fetchedSetlists.push({
-                            concert_name: item.tour?.name || item.artist.name,
-                            date: item.eventDate,
-                            venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
-                            concert_id: item.id,
-                            song: item.sets.set[0].song
-                        })
-                    }
-                })
+                const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
+                const data = await response.json()
+
+                console.log(response.status)
+                let fetchedSetlists: Setlist[] = []
+
+                if (data.setlist && Array.isArray(data.setlist)) {
+                    data.setlist.map((item: any) => {
+                        if (item.sets && item.sets.set && item.sets.set.length > 0) {
+                            fetchedSetlists.push({
+                                concert_name: item.tour?.name || item.artist.name,
+                                date: item.eventDate,
+                                venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
+                                concert_id: item.id,
+                                song: item.sets.set[0].song
+                            })
+                        }
+                    })
+                }
+
+                setSetlists(fetchedSetlists)
+                page.finish()
+            } else if (selectedSite === "livefans") {
+                onClose()
+                page.start()
+
+                const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
+                const fetchedSetlists: Setlist[] = await response.json()
+
+                setSetlists(fetchedSetlists)
+
+
+                page.finish()
+
             }
-
-            setSetlists(fetchedSetlists)
+        } catch (error) {
+            console.error('エラー:', error);
             page.finish()
-        } else if (selectedSite === "livefans") {
-            onClose()
-            page.start()
-
-            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
-            const fetchedSetlists: Setlist[] = await response.json()
-
-            setSetlists(fetchedSetlists)
-
-
+            notice({
+                title: 'エラー',
+                description: 'もう一度お試しください',
+                status: 'error',
+            })
+        } finally {
             page.finish()
-
         }
+
     }
 
     const handleSetlistSelect = (setlist: Setlist) => {

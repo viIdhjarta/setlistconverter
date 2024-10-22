@@ -25,6 +25,8 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
 
     const { page } = useLoading()
 
+
+
     const handleClick = async () => {
 
         page.start()
@@ -71,6 +73,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                     />
                 </>
             )}
+
         </>
     )
 }
