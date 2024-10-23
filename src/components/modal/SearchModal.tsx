@@ -37,12 +37,16 @@ type EditTrackModalProps = {
     selectedSite: string
 }
 
+type Song = {
+    name: string
+}
+
 type Setlist = {
     concert_name: string
     date: string
     venue: string
     concert_id: string,
-    song: []
+    song: Song[]
 }
 
 export default function SearchModal({ isOpen, onClose, artistName, data, selectedSite }: EditTrackModalProps) {
@@ -67,8 +71,9 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
                 const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
                 const data = await response.json()
+                console.log(data)
 
-                console.log(response.status)
+
                 let fetchedSetlists: Setlist[] = []
 
                 if (data.setlist && Array.isArray(data.setlist)) {
@@ -79,13 +84,19 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                 date: item.eventDate,
                                 venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
                                 concert_id: item.id,
-                                song: item.sets.set[0].song
+                                song: []
                             })
+                            item.sets.set.forEach((set: any) => {
+                                if (Array.isArray(set.song)) {
+                                    fetchedSetlists[fetchedSetlists.length - 1].song.push(...set.song); 
+                                }
+                            });
                         }
                     })
                 }
 
                 setSetlists(fetchedSetlists)
+
                 page.finish()
             } else if (selectedSite === "livefans") {
                 onClose()
