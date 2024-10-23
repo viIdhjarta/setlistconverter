@@ -47,7 +47,6 @@ function UrlPlaylist() {
             const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/setlistfm/${setlistId}`;
 
             const headers = {
-                "x-api-key": XAPIKEY,
                 "Accept": "application/json",
                 'Access-Control-Allow-Origin': '*'
             };
