@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { Button, VStack, useDisclosure } from '@yamada-ui/react'
 import TrackList from '../TrackList'
-import EditTrackModal from '../EditTrackModal'
+import EditTrackModal from '../modal/EditTrackModal'
 import ReplaceButton from './ReplaceButton'
 import { Track } from '../../types/Track'
 
@@ -20,7 +20,7 @@ export default function ModifyButton({ setlistId, setShowIframe, children }: { s
 
         // const url = `http://localhost:3000/api/modify/${setlistId}`
         const url = `https://setlistconverter_backend.tapioka.workers.dev/api/modify/${setlistId}`
-        
+
 
         const response = await axios.get(url)
         console.log(response)
@@ -89,6 +89,8 @@ export default function ModifyButton({ setlistId, setShowIframe, children }: { s
             onClose()
         }
     }
+
+
 
 
     return (

@@ -18,7 +18,7 @@ import {
     Flex
 } from '@yamada-ui/react'
 import { FiRefreshCcw } from 'react-icons/fi' // 追加
-import { Track } from '../types/Track'
+import { Track } from '../../types/Track'
 
 type EditTrackModalProps = {
     isOpen: boolean
@@ -61,12 +61,12 @@ export default function EditTrackModal({ isOpen, onClose, editingTrack, setTrack
                                     <Text color="gray.500">{song.artists}</Text>
                                 </Box>
                                 <Divider orientation="vertical" height="50px" mx="1" />
-                                <IconButton // 追加
-                                    aria-label="Replace track" // 追加
-                                    icon={<FiRefreshCcw />} // 追加
-                                    onClick={() => handleReplace(song)} // 追加
-                                    variant="ghost" // 追加
-                                    colorScheme="green" // 追加
+                                <IconButton 
+                                    aria-label="Replace track" 
+                                    icon={<FiRefreshCcw />} 
+                                    onClick={() => handleReplace(song)} 
+                                    variant="ghost" 
+                                    colorScheme="green" 
                                 />
                             </Flex>
                         ))}
