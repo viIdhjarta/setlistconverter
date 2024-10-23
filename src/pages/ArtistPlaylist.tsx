@@ -27,7 +27,7 @@ function ArtistPlaylist() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/artist/search?q=${encodeURIComponent(artistName)}`);
+            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/artist/search?q=${encodeURIComponent(artistName)}&site=${selectedSite}`);
             if (!response.ok) {
                 throw new Error('APIリクエストに失敗しました');
             }
@@ -51,7 +51,7 @@ function ArtistPlaylist() {
                 <form onSubmit={handleSubmit}>
                     <Select placeholder="サイトを選択" onChange={handleSiteChange}>
                         <Option value="setlistfm">SetlistFM</Option>
-                        <Option value="livefans">LiveFans</Option>
+                        <Option value="livefans">LiveFans (国内アーティストはこちら)</Option>
                     </Select>
                     <FormControl label="アーティスト名を入力してください">
                         <Input type="text" placeholder="アーティスト名" onChange={(e) => setArtistName(e.target.value)} />

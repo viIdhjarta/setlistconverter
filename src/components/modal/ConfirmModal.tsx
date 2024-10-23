@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
     Modal,
     ModalBody,
@@ -26,6 +26,9 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
     const { page } = useLoading()
 
 
+    const iframeRef = useRef<HTMLDivElement>(null)
+
+
 
     const handleClick = async () => {
 
@@ -40,9 +43,16 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
         const response = await fetch(url);
         const data = await response.json()
         setSetlist(data)
+
         console.log(data)
         page.finish()
     }
+
+    useEffect(() => {
+        if (setlist && iframeRef.current) {
+            iframeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+    }, [setlist])
 
     return (
         <>
@@ -66,11 +76,15 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                 <>
                     <br />
                     <br />
-                    <Iframe
-                        url={`https://open.spotify.com/embed/playlist/${setlist.setlist_id}`}
-                        width="100%"
-                        height="600px"
-                    />
+                    <div ref={iframeRef}>
+                        <br />
+                        <br />
+                        <Iframe
+                            url={`https://open.spotify.com/embed/playlist/${setlist.setlist_id}`}
+                            width="100%"
+                            height="600px"
+                        />
+                    </div>
                 </>
             )}
 

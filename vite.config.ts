@@ -18,5 +18,6 @@ function injectScript(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), injectScript()],
-  base: '/setlistconverter/'
+  // base: '/setlistconverter/'
+  base: process.env.GITHUB_PAGES ? 'REPOSITORY_NAME' : '/setlistconverter',
 })
