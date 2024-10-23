@@ -4,7 +4,6 @@ import Field from '../components/Field'
 import ModifyButton from '../components/button/ModifyButton';
 import Iframe from "react-iframe";
 import { Checkbox, CheckboxGroup, Select, Option, useLoading, useBoolean, Button } from "@yamada-ui/react"
-import { XAPIKEY } from '../../env'
 
 
 interface Song {
@@ -48,7 +47,6 @@ function UrlPlaylist() {
             const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/setlistfm/${setlistId}`;
 
             const headers = {
-                "x-api-key": XAPIKEY,
                 "Accept": "application/json",
                 'Access-Control-Allow-Origin': '*'
             };
