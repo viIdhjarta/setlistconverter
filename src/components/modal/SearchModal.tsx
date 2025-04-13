@@ -8,13 +8,12 @@ import {
     ModalOverlay,
     Button,
     VStack,
-    IconButton,
-    Divider,
     useLoading,
     Text,
     Box,
     Image,
     Flex,
+    HStack,
     GridItem,
     SimpleGrid,
     useDisclosure,
@@ -22,9 +21,10 @@ import {
     AccordionItem,
     AccordionLabel,
     AccordionPanel,
+    Card,
     useNotice
 } from '@yamada-ui/react'
-import { FiPlus, FiCheck } from 'react-icons/fi'
+import { FiCheck } from 'react-icons/fi'
 import ConfirmModal from './ConfirmModal'
 
 
@@ -88,7 +88,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                             })
                             item.sets.set.forEach((set: any) => {
                                 if (Array.isArray(set.song)) {
-                                    fetchedSetlists[fetchedSetlists.length - 1].song.push(...set.song); 
+                                    fetchedSetlists[fetchedSetlists.length - 1].song.push(...set.song);
                                 }
                             });
                         }
@@ -133,28 +133,22 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={onClose} size='3xl'>
+            <Modal isOpen={isOpen} onClose={onClose} size='xl'>
                 <ModalOverlay />
                 <ModalHeader>{artistName} の検索結果</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     {data && data.artists && (
-                        <VStack align="stretch" divider={<Divider />}>
+                        <VStack align="stretch">
                             {data.artists.items.filter((artist: any) => artist.images && artist.images[0]).map((artist: any) => (
-                                <Flex key={artist.id} alignItems="center" justifyContent="space-between">
-                                    <Box display="flex" alignItems="center" gap="20px">
-                                        <Image src={artist.images[0].url} alt={artist.name} boxSize="70px" objectFit="cover" />
-                                        <Text fontWeight="bold">{artist.name}</Text>
-
-                                    </Box>
-                                    <IconButton
-                                        aria-label="Replace track"
-                                        icon={<FiPlus />}
-                                        onClick={() => handleClick(artist)}
-                                        variant="ghost"
-                                        colorScheme="green"
-                                    />
-                                </Flex>
+                                <Card key={artist.id} flex="1" onClick={() => handleClick(artist)} _hover={{ bg: "gray.200" }}>
+                                    <Flex>
+                                        <HStack>
+                                            <Image src={artist.images[0].url} alt={artist.name} boxSize="70px" objectFit="cover" borderRadius="lg" />
+                                            <Text fontWeight="bold">{artist.name}</Text>
+                                        </HStack>
+                                    </Flex>
+                                </Card>
                             ))}
                         </VStack>
                     )}
@@ -168,11 +162,10 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
             {setlists.length > 0 && (
                 <Box mt={6}>
                     <Text fontWeight="bold" mb={4}>セットリストを選択してください：</Text>
-                    <SimpleGrid gap="md">
-                        {/* <SimpleGrid columns={2}> */}
+                    <SimpleGrid gap="md" columns={2}>
                         {setlists.map((setlist) => (
 
-                            <Accordion isToggle key={setlist.concert_id}>
+                            <Accordion isToggle key={setlist.concert_id} variant="card">
                                 <AccordionItem>
                                     <AccordionLabel>
                                         <SimpleGrid w="full" gap="md">
@@ -192,7 +185,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                             </GridItem>
                                         </SimpleGrid>
                                     </AccordionLabel>
-                                    <AccordionPanel>
+                                    <AccordionPanel bg="gray.50">
                                         {setlist.song?.map((song: any, index: number) => (
                                             <div key={`${setlist.concert_id}-${index}`}>{song.name}</div>
                                         ))}

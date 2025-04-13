@@ -9,6 +9,7 @@ import {
 import { Button } from "@yamada-ui/react"
 import SearchModal from '../components/modal/SearchModal';
 
+
 function ArtistPlaylist() {
     const [artistName, setArtistName] = useState('');
     const [selectedSite, setSelectedSite] = useState('');
@@ -47,6 +48,7 @@ function ArtistPlaylist() {
     return (
         <>
             <div>
+
                 {/* <h1>アーティスト名からプレイリスト作成</h1> */}
                 <form onSubmit={handleSubmit}>
                     <Select placeholder="サイトを選択" onChange={handleSiteChange}>
