@@ -1,8 +1,8 @@
 # React + TypeScript + Vite
 
 https://viidhjarta.github.io/setlistconverter/
+https://github.com/user-attachments/assets/bdc123f7-49d0-4b34-818a-15af65b4cb9a
 
-![Image](https://github.com/user-attachments/assets/a2fb2f7e-6629-4e18-994c-a8a51dedd586)
 
 # SetlistConverter
 
@@ -63,4 +63,3 @@ SetlistConverterは、セットリスト投稿サイト（SetlistFM、LiveFans�
 ## ライセンス
 
 [MIT License](LICENSE)
-https://github.com/user-attachments/assets/bdc123f7-49d0-4b34-818a-15af65b4cb9a
