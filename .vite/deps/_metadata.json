@@ -1,0 +1,73 @@
+{
+  "hash": "c77dd94e",
+  "configHash": "1fc6780a",
+  "lockfileHash": "4b38872b",
+  "browserHash": "99f0c177",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "46402e65",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "572d734c",
+      "needsInterop": true
+    },
+    "@yamada-ui/react": {
+      "src": "../../node_modules/@yamada-ui/react/dist/index.mjs",
+      "file": "@yamada-ui_react.js",
+      "fileHash": "804dd171",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "79686f3a",
+      "needsInterop": false
+    },
+    "@yamada-ui/lucide": {
+      "src": "../../node_modules/@yamada-ui/lucide/dist/index.mjs",
+      "file": "@yamada-ui_lucide.js",
+      "fileHash": "25fe107c",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "9a8d5a2f",
+      "needsInterop": false
+    },
+    "react-iframe": {
+      "src": "../../node_modules/react-iframe/dist/es/iframe.js",
+      "file": "react-iframe.js",
+      "fileHash": "1475e470",
+      "needsInterop": false
+    },
+    "react-icons/fi": {
+      "src": "../../node_modules/react-icons/fi/index.mjs",
+      "file": "react-icons_fi.js",
+      "fileHash": "b82cd809",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-ZIYUGMGG": {
+      "file": "chunk-ZIYUGMGG.js"
+    },
+    "chunk-VHETXZ2U": {
+      "file": "chunk-VHETXZ2U.js"
+    },
+    "chunk-SBZ2HSYN": {
+      "file": "chunk-SBZ2HSYN.js"
+    },
+    "chunk-65KY755N": {
+      "file": "chunk-65KY755N.js"
+    },
+    "chunk-V4OQ3NZ2": {
+      "file": "chunk-V4OQ3NZ2.js"
+    }
+  }
+}
