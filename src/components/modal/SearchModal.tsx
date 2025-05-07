@@ -14,7 +14,6 @@ import {
     Image,
     Flex,
     HStack,
-    GridItem,
     SimpleGrid,
     useDisclosure,
     Accordion,
@@ -22,7 +21,9 @@ import {
     AccordionLabel,
     AccordionPanel,
     Card,
-    useNotice
+    useNotice,
+    Container,
+    Center
 } from '@yamada-ui/react'
 import { FiCheck } from 'react-icons/fi'
 import ConfirmModal from './ConfirmModal'
@@ -56,23 +57,21 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
     const [setlists, setSetlists] = useState<Setlist[]>([])
     const [selectedSetlist, setSelectedSetlist] = useState<Setlist | null>(null)
-
+    const [showSetlistSelection, setShowSetlistSelection] = useState(false)
 
     const { isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose } = useDisclosure()
 
 
     const handleClick = async (artist: any) => {
-
         try {
+            setShowSetlistSelection(true)
+            onClose()
+            page.start()
+
             if (selectedSite === "setlistfm") {
-
-                onClose()
-                page.start()
-
                 const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
                 const data = await response.json()
                 console.log(response)
-
 
                 let fetchedSetlists: Setlist[] = []
 
@@ -96,21 +95,13 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                 }
 
                 setSetlists(fetchedSetlists)
-
-                page.finish()
             } else if (selectedSite === "livefans") {
-                onClose()
-                page.start()
-
                 const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
                 const fetchedSetlists: Setlist[] = await response.json()
-
                 setSetlists(fetchedSetlists)
-
-
-                page.finish()
-
             }
+
+            page.finish()
         } catch (error) {
             console.error('エラー:', error);
             page.finish()
@@ -119,10 +110,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                 description: 'もう一度お試しください',
                 status: 'error',
             })
-        } finally {
-            page.finish()
         }
-
     }
 
     const handleSetlistSelect = (setlist: Setlist) => {
@@ -131,8 +119,15 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
         onConfirmOpen()
     }
 
+    const resetSelection = () => {
+        setShowSetlistSelection(false)
+        setSetlists([])
+        setSelectedSetlist(null)
+    }
+
     return (
         <>
+            {/* アーティスト選択のモーダル */}
             <Modal isOpen={isOpen} onClose={onClose} size='xl'>
                 <ModalOverlay />
                 <ModalHeader>{artistName} の検索結果</ModalHeader>
@@ -159,45 +154,83 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                     </Button>
                 </ModalFooter>
             </Modal>
-            {setlists.length > 0 && (
-                <Box mt={6}>
-                    <Text fontWeight="bold" mb={4}>セットリストを選択してください：</Text>
-                    <SimpleGrid gap="md" columns={2}>
-                        {setlists.map((setlist) => (
 
-                            <Accordion isToggle key={setlist.concert_id} variant="card">
-                                <AccordionItem>
-                                    <AccordionLabel>
-                                        <SimpleGrid w="full" gap="md">
-                                            <GridItem>
-                                                <Text fontWeight="bold">{setlist.concert_name}</Text>
-                                                <Text>日付: {setlist.date}</Text>
-                                                <Text>会場: {setlist.venue}</Text>
-                                                <GridItem textAlign="right">
-                                                    <Button
-                                                        colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "gray"}
-                                                        onClick={() => handleSetlistSelect(setlist)}
-                                                        leftIcon={selectedSetlist?.concert_id === setlist.concert_id ? <FiCheck /> : undefined}
-                                                    >
-                                                        {selectedSetlist?.concert_id === setlist.concert_id ? "選択中" : "選択"}
-                                                    </Button>
-                                                </GridItem>
-                                            </GridItem>
-                                        </SimpleGrid>
-                                    </AccordionLabel>
-                                    <AccordionPanel bg="gray.50">
-                                        {setlist.song?.map((song: any, index: number) => (
-                                            <div key={`${setlist.concert_id}-${index}`}>{song.name}</div>
-                                        ))}
-                                    </AccordionPanel>
-                                </AccordionItem>
-                            </Accordion>
+            {/* セットリスト選択表示 */}
+            {showSetlistSelection && setlists.length > 0 && (
+                <Center className="fixed inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 overflow-auto z-40">
+                    <Container maxW="6xl" py={8}>
+                        <Box
+                            bg="white"
+                            shadow="lg"
+                            rounded="xl"
+                            p={8}
+                            mb={8}
+                            className="relative"
+                        >
+                            <Button
+                                position="absolute"
+                                top={4}
+                                right={4}
+                                colorScheme="gray"
+                                variant="ghost"
+                                onClick={resetSelection}
+                            >
+                                戻る
+                            </Button>
 
+                            <Text fontSize="2xl" fontWeight="bold" mb={8} textAlign="center">
+                                セットリストを選択してください
+                            </Text>
 
-                        ))}
-                    </SimpleGrid>
-                </Box>
+                            <SimpleGrid gap="md" columns={{ base: 1, md: 2 }}>
+                                {setlists.map((setlist) => (
+                                    <Accordion isToggle key={setlist.concert_id} variant="card">
+                                        <AccordionItem>
+                                            <AccordionLabel>
+                                                <Box w="full">
+                                                    <Text fontWeight="bold">{setlist.concert_name}</Text>
+                                                    <HStack justifyContent="space-between" mt={2}>
+                                                        <VStack alignItems="flex-start">
+                                                            <Text>日付: {setlist.date}</Text>
+                                                            <Text>会場: {setlist.venue}</Text>
+                                                        </VStack>
+                                                        <Button
+                                                            colorScheme={selectedSetlist?.concert_id === setlist.concert_id ? "green" : "purple"}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleSetlistSelect(setlist);
+                                                            }}
+                                                            leftIcon={selectedSetlist?.concert_id === setlist.concert_id ? <FiCheck /> : undefined}
+                                                            size="sm"
+                                                        >
+                                                            {selectedSetlist?.concert_id === setlist.concert_id ? "選択中" : "選択"}
+                                                        </Button>
+                                                    </HStack>
+                                                </Box>
+                                            </AccordionLabel>
+                                            <AccordionPanel bg="gray.50">
+                                                {setlist.song?.length > 0 ? (
+                                                    <VStack alignItems="flex-start">
+                                                        {setlist.song.map((song: any, index: number) => (
+                                                            <Text key={`${setlist.concert_id}-${index}`}>
+                                                                {index + 1}. {song.name}
+                                                            </Text>
+                                                        ))}
+                                                    </VStack>
+                                                ) : (
+                                                    <Text>曲情報がありません</Text>
+                                                )}
+                                            </AccordionPanel>
+                                        </AccordionItem>
+                                    </Accordion>
+                                ))}
+                            </SimpleGrid>
+                        </Box>
+                    </Container>
+                </Center>
             )}
+
+            {/* 確認モーダル */}
             {selectedSetlist && (
                 <ConfirmModal isOpen={isConfirmOpen} onClose={onConfirmClose} setlist_id={selectedSetlist.concert_id} selectedSite={selectedSite} />
             )}
