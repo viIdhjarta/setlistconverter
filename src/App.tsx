@@ -14,17 +14,14 @@ function App() {
 }
 
 function AppContent() {
-
   const location = useLocation()
   const isHomePage = location.pathname === "/"
 
-
-
   return (
-    <Box minHeight="100vh" p={8}>
+    <Box className="fixed inset-0 w-full min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 overflow-auto">
       <Sidebar />
       {isHomePage && (
-        <Heading as="h1" size="2xl" mb={8} textAlign="center">
+        <Heading as="h1" size="2xl" mb={8} textAlign="center" className="text-white pt-8">
           プレイリスト作成アプリ
         </Heading>
       )}

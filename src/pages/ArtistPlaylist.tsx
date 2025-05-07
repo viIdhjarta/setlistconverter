@@ -47,7 +47,7 @@ function ArtistPlaylist() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center w-full py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md">
                 <Box
                     bg="white"
@@ -62,7 +62,7 @@ function ArtistPlaylist() {
                         </div>
 
                         <Text fontSize="2xl" fontWeight="bold" className="text-gray-800">
-                            アーティスト検索
+                            アーティストからプレイリストを作成
                         </Text>
 
                         <Text fontSize="md" className="text-center text-gray-500">
