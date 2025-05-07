@@ -47,71 +47,63 @@ function ArtistPlaylist() {
     };
 
     return (
-        <div className="flex items-center justify-center w-full py-12 px-4 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md">
-                <Box
-                    bg="white"
-                    shadow="lg"
-                    rounded="xl"
-                    p={8}
-                    className="transform transition-all duration-500 hover:scale-105"
-                >
-                    <VStack gap="6" alignItems="center">
-                        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100">
-                            <FiMusic className="w-10 h-10 text-indigo-600" />
-                        </div>
+        <div className="p-6">
+            <Box
+                bg="white"
+                shadow="sm"
+                rounded="md"
+                p={6}
+                className="transform transition-all duration-500 hover:scale-100 hover:shadow-lg"
+            >
+                <VStack gap="6" alignItems="center">
+                    <div className="flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100">
+                        <FiMusic className="w-10 h-10 text-indigo-600" />
+                    </div>
 
-                        <Text fontSize="2xl" fontWeight="bold" className="text-gray-800">
-                            アーティストからプレイリストを作成
-                        </Text>
+                    <Text fontSize="2xl" fontWeight="bold" className="text-gray-800">
+                        アーティストからプレイリストを作成
+                    </Text>
 
-                        <Text fontSize="md" className="text-center text-gray-500">
-                            アーティスト名から過去のセットリストを検索し、Spotifyプレイリストを作成します
-                        </Text>
+                    <Text fontSize="md" className="text-center text-gray-500">
+                        アーティスト名から過去のセットリストを検索し、Spotifyプレイリストを作成します
+                    </Text>
 
-                        <form onSubmit={handleSubmit} className="w-full space-y-4">
-                            <Select
-                                placeholder="サイトを選択"
-                                onChange={handleSiteChange}
+                    <form onSubmit={handleSubmit} className="w-full space-y-4">
+                        <Select
+                            placeholder="サイトを選択"
+                            onChange={handleSiteChange}
+                            variant="filled"
+                            className="shadow-sm"
+                            size="lg"
+                        >
+                            <Option value="setlistfm">SetlistFM</Option>
+                            <Option value="livefans">LiveFans (国内アーティストはこちら)</Option>
+                        </Select>
+
+                        <FormControl label="アーティスト名を入力してください">
+                            <Input
+                                type="text"
+                                placeholder="アーティスト名"
+                                onChange={(e) => setArtistName(e.target.value)}
+                                size="lg"
                                 variant="filled"
                                 className="shadow-sm"
-                                size="lg"
-                            >
-                                <Option value="setlistfm">SetlistFM</Option>
-                                <Option value="livefans">LiveFans (国内アーティストはこちら)</Option>
-                            </Select>
+                            />
+                        </FormControl>
 
-                            <FormControl label="アーティスト名を入力してください">
-                                <Input
-                                    type="text"
-                                    placeholder="アーティスト名"
-                                    onChange={(e) => setArtistName(e.target.value)}
-                                    size="lg"
-                                    variant="filled"
-                                    className="shadow-sm"
-                                />
-                            </FormControl>
-
-                            <Button
-                                type="submit"
-                                isDisabled={(artistName === '') || (selectedSite === '')}
-                                colorScheme="primary"
-                                size="lg"
-                                className="w-full mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md"
-                                leftIcon={<FiSearch />}
-                            >
-                                {isLoading ? '検索中...' : '検索'}
-                            </Button>
-                        </form>
-                    </VStack>
-                </Box>
-
-                <div className="mt-6 text-center text-sm">
-                    <p className="text-white opacity-80">
-                        セットリスト情報は SetlistFM および LiveFans から取得しています
-                    </p>
-                </div>
-            </div>
+                        <Button
+                            type="submit"
+                            isDisabled={(artistName === '') || (selectedSite === '')}
+                            colorScheme="primary"
+                            size="lg"
+                            className="w-full mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md"
+                            leftIcon={<FiSearch />}
+                        >
+                            {isLoading ? '検索中...' : '検索'}
+                        </Button>
+                    </form>
+                </VStack>
+            </Box>
 
             <SearchModal isOpen={isOpen} onClose={onClose} artistName={artistName} data={data} selectedSite={selectedSite} />
         </div>
