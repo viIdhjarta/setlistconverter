@@ -71,7 +71,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
                 const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
                 const data = await response.json()
-                console.log(data)
+                console.log(response)
 
 
                 let fetchedSetlists: Setlist[] = []

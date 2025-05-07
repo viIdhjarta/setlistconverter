@@ -28,8 +28,6 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
 
     const iframeRef = useRef<HTMLDivElement>(null)
 
-
-
     const handleClick = async () => {
 
         page.start()
@@ -44,7 +42,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
         const data = await response.json()
         setSetlist(data)
 
-        console.log(data)
+        console.log(response)
         page.finish()
     }
 
@@ -52,6 +50,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
         if (setlist && iframeRef.current) {
             iframeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
+        console.log(setlist.setlist_id)
     }, [setlist])
 
     return (
@@ -72,7 +71,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                 </ModalFooter>
             </Modal>
 
-            {setlist && (
+            {setlist.setlist_id && (
                 <>
                     <br />
                     <br />

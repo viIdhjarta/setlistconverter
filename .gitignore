@@ -24,3 +24,5 @@ env.ts
 *.njsproj
 *.sln
 *.sw?
+# SpecStory explanation file
+.specstory/.what-is-this.md
