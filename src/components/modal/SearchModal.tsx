@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useDisclosure, useNotice, } from '@yamada-ui/react'
 import { FiCheck, FiX, FiChevronDown, FiChevronUp, FiUser } from 'react-icons/fi'
 import ConfirmModal from './ConfirmModal'
+import { API_ENDPOINTS } from '../../config';
 
 type EditTrackModalProps = {
     isOpen: boolean
@@ -151,7 +152,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
             onClose()
 
             if (selectedSite === "setlistfm") {
-                const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
+                const response = await fetch(`${API_ENDPOINTS.SETLISTFM_SEARCH(artist.name)}`)
                 const data = await response.json()
 
                 let fetchedSetlists: Setlist[] = []
@@ -177,7 +178,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
 
                 setSetlists(fetchedSetlists)
             } else if (selectedSite === "livefans") {
-                const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/fetch-html/${selectedSite}?artist=${encodeURIComponent(artist.name)}`)
+                const response = await fetch(`${API_ENDPOINTS.LIVEFANS_SEARCH(artist.name)}`)
                 const fetchedSetlists: Setlist[] = await response.json()
                 setSetlists(fetchedSetlists)
             }

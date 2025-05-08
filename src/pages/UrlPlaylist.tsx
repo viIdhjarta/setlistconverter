@@ -5,7 +5,7 @@ import ModifyButton from '../components/button/ModifyButton';
 import Iframe from "react-iframe";
 import { Checkbox, CheckboxGroup, Select, Option, useLoading, useBoolean, Button, Text, Box, VStack, HStack, Divider } from "@yamada-ui/react"
 import { FiLink, FiMusic, FiEdit2 } from 'react-icons/fi';
-
+import { API_ENDPOINTS } from '../config';
 interface Song {
     index: number;
     name: string;
@@ -44,7 +44,7 @@ function UrlPlaylist() {
 
     const getSetlist = async (setlistId: string, isCover: boolean, selectSite: string): Promise<Setlist> => {
         if (selectSite === "SetlistFM") {
-            const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/setlistfm/${setlistId}`;
+            const url = API_ENDPOINTS.SETLISTFM(setlistId);
 
             const headers = {
                 "Accept": "application/json",
@@ -56,7 +56,7 @@ function UrlPlaylist() {
             return response.data;
         } else if (selectSite === "LiveFans") {
 
-            const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/livefans/${setlistId}`;
+            const url = API_ENDPOINTS.LIVEFANS(setlistId);
 
 
             const response = await axios.get(url, { params: { isCover } });
@@ -94,8 +94,6 @@ function UrlPlaylist() {
         try {
             page.start();
             let fetchedSetlist = await getSetlist(id_part, isCoverChecked, selectedSite);
-            console.log('Setlist:', fetchedSetlist);
-            console.log('isCover:', isCoverChecked);
 
             setSetlist(fetchedSetlist); // 取得したsetlistを状態に保存      
         } catch (error) {

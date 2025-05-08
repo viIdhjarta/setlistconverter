@@ -1,11 +1,10 @@
-import { useState, useRef, useEffect } from 'react'
-import {
-    useLoading
-} from '@yamada-ui/react'
-import Iframe from "react-iframe";
-import { FiMusic, FiX } from 'react-icons/fi';
+import { useEffect, useRef, useState } from "react"
+import { useLoading } from "@yamada-ui/react"
+import Iframe from "react-iframe"
+import { FiCheck, FiX } from "react-icons/fi"
+import { API_ENDPOINTS } from "../../config"
 
-type ConfirmModalProps = {
+interface ConfirmModalProps {
     isOpen: boolean
     onClose: () => void
     setlist_id: string
@@ -37,9 +36,14 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
         onClose()
 
         try {
-            const url = `https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/${selectedSite}/${setlist_id}`;
+            // const siteKey = selectedSite.toLowerCase() === 'setlistfm' ? 'setlistfm' : 'livefans';
+            // 適切なAPIエンドポイントを使用
+            const url = selectedSite.toLowerCase() === 'setlistfm'
+                ? API_ENDPOINTS.SETLISTFM(setlist_id)
+                : API_ENDPOINTS.LIVEFANS(setlist_id);
 
-            const response = await fetch(url);
+
+            const response = await fetch(url)
             const data = await response.json()
             setSetlist(data)
             setShowPlaylist(true)
@@ -63,6 +67,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
 
     return (
         <>
+            {/* セットリスト確認モーダル */}
             {isOpen && (
                 <div className="fixed inset-0 z-50 overflow-y-auto">
                     <div className="flex items-center justify-center min-h-screen px-4 text-center">
@@ -81,20 +86,22 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                                 </button>
                             </div>
 
-                            <div className="mt-6 flex justify-end space-x-3">
+                            <div className="mt-6 flex justify-center gap-4">
                                 <button
                                     type="button"
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-md focus:outline-none"
-                                    onClick={onClose}
+                                    className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none flex items-center"
+                                    onClick={handleClick}
                                 >
-                                    キャンセル
+                                    <FiCheck className="mr-2" />
+                                    はい、作成します
                                 </button>
                                 <button
                                     type="button"
-                                    className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none"
-                                    onClick={handleClick}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-md focus:outline-none flex items-center"
+                                    onClick={onClose}
                                 >
-                                    プレイリストを作成
+                                    <FiX className="mr-2" />
+                                    キャンセル
                                 </button>
                             </div>
                         </div>
@@ -102,8 +109,9 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                 </div>
             )}
 
-            {showPlaylist && setlist && setlist.setlist_id && (
-                <div className="fixed inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 z-50 overflow-auto">
+            {/* プレイリスト表示モーダル */}
+            {showPlaylist && setlist && (
+                <div className="fixed inset-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 z-50 overflow-auto">
                     <div className="min-h-screen py-8 px-4">
                         <div className="max-w-4xl mx-auto">
                             <div
@@ -118,25 +126,9 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                                 </button>
 
                                 <div className="flex flex-col items-center mb-6 space-y-4">
-                                    <div className="flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100">
-                                        <FiMusic className="w-10 h-10 text-indigo-600" />
-                                    </div>
-
                                     <h2 className="text-2xl font-bold text-center">
                                         プレイリストを作成しました
                                     </h2>
-
-                                    {setlist.artist_name && (
-                                        <p className="text-lg text-center">
-                                            {setlist.artist_name}
-                                        </p>
-                                    )}
-
-                                    {setlist.tour_name && (
-                                        <p className="text-md text-center text-gray-600">
-                                            {setlist.tour_name}
-                                        </p>
-                                    )}
                                 </div>
 
                                 <div className="w-full rounded-lg overflow-hidden shadow-md">
@@ -147,6 +139,8 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                                         className="border-0"
                                     />
                                 </div>
+
+
                             </div>
                         </div>
                     </div>

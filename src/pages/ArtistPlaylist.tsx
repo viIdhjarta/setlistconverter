@@ -12,6 +12,7 @@ import {
 import { Button } from "@yamada-ui/react"
 import SearchModal from '../components/modal/SearchModal';
 import { FiMusic, FiSearch } from 'react-icons/fi';
+import { API_ENDPOINTS } from '../config';
 
 function ArtistPlaylist() {
     const [artistName, setArtistName] = useState('');
@@ -29,7 +30,7 @@ function ArtistPlaylist() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await fetch(`https://0gri69uq0g.execute-api.ap-northeast-1.amazonaws.com/prod/api/artist/search?q=${encodeURIComponent(artistName)}&site=${selectedSite}`);
+            const response = await fetch(`${API_ENDPOINTS.ARTIST_SEARCH}?q=${encodeURIComponent(artistName)}&site=${selectedSite}`);
             if (!response.ok) {
                 throw new Error('APIリクエストに失敗しました');
             }
@@ -53,7 +54,7 @@ function ArtistPlaylist() {
                 shadow="sm"
                 rounded="md"
                 p={6}
-                className="transform transition-all duration-500 hover:scale-100 hover:shadow-lg"
+                className="transform transition-all duration-500 hover:scale-105 hover:shadow-lg"
             >
                 <VStack gap="6" alignItems="center">
                     <div className="flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100">
