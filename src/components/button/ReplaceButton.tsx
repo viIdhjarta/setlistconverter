@@ -38,7 +38,7 @@ const ReplaceButton: React.FC<{ setlistId: string; tracks: Track[]; children: Re
             </Button>
             }
             {isClick && <Iframe
-                url={setlistId ? `https://open.spotify.com/embed/playlist/${playlistId} ` : []}
+                url={setlistId ? `https://open.spotify.com/embed/playlist/${playlistId}` : []}
                 width="100%"
                 height="600px"
             />}
