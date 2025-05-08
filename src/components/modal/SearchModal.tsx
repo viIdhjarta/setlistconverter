@@ -282,10 +282,18 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                 <div className="flex items-center justify-center h-screen">
                                     <div className="bg-white rounded-xl p-8 shadow-lg">
                                         <p className="text-xl font-bold text-center mb-4">セットリストを取得中...</p>
-                                        <div className="flex justify-center">
+                                        {selectedSite === "livefans" && (
+                                            <div className="flex justify-center">
+                                                <p className="text-sm text-gray-500">LiveFansのセットリストは、セットリストの取得に時間がかかります。</p>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-center mt-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
                                         </div>
+
                                     </div>
+
+
                                 </div>
                             ) : (
                                 <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg relative">
