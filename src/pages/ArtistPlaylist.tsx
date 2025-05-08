@@ -54,7 +54,7 @@ function ArtistPlaylist() {
                 shadow="sm"
                 rounded="md"
                 p={6}
-                className="transform transition-all duration-500 hover:scale-105 hover:shadow-lg"
+                className="transform transition-all duration-500 hover:scale-100 hover:shadow-lg"
             >
                 <VStack gap="6" alignItems="center">
                     <div className="flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100">

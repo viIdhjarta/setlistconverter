@@ -6,7 +6,7 @@ const isDevelopment = import.meta.env.MODE === 'development';
 // APIのベースURL
 export const API_BASE_URL = isDevelopment
   ? 'http://localhost:3030'
-  : 'https://jllyl7rl5d.execute-api.ap-northeast-1.amazonaws.com/Prod/';
+  : 'https://jllyl7rl5d.execute-api.ap-northeast-1.amazonaws.com/Prod';
 
 // APIエンドポイント
 export const API_ENDPOINTS = {

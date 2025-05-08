@@ -74,7 +74,7 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                         <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
 
                         <div className="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl z-50">
-                            <div className="flex justify-between items-start">
+                            <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-lg font-medium leading-6 text-gray-900">
                                     このセットリストでプレイリストを作成しますか？
                                 </h3>
@@ -86,22 +86,14 @@ export default function ConfirmModal({ isOpen, onClose, setlist_id, selectedSite
                                 </button>
                             </div>
 
-                            <div className="mt-6 flex justify-center gap-4">
+                            <div className="flex justify-center">
                                 <button
                                     type="button"
                                     className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none flex items-center"
                                     onClick={handleClick}
                                 >
                                     <FiCheck className="mr-2" />
-                                    はい、作成します
-                                </button>
-                                <button
-                                    type="button"
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-md focus:outline-none flex items-center"
-                                    onClick={onClose}
-                                >
-                                    <FiX className="mr-2" />
-                                    キャンセル
+                                    作成
                                 </button>
                             </div>
                         </div>
