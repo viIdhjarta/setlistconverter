@@ -53,14 +53,30 @@ const SetlistCard = ({
     isExpanded,
     onToggle,
     isSelected,
-    onSelect
+    onSelect,
+    selectedSite,
+    loadSongsForSetlist
 }: {
     setlist: Setlist,
     isExpanded: boolean,
     onToggle: () => void,
     isSelected: boolean,
-    onSelect: () => void
+    onSelect: () => void,
+    selectedSite: string,
+    loadSongsForSetlist: (setlistId: string) => Promise<void>
 }) => {
+    const [isLoadingSongs, setIsLoadingSongs] = useState(false);
+
+    const handleToggle = async () => {
+        // LiveFansの場合は曲情報を動的に取得
+        if (selectedSite === "livefans" && !isExpanded && (!setlist.song || setlist.song.length === 0)) {
+            setIsLoadingSongs(true);
+            await loadSongsForSetlist(setlist.concert_id);
+            setIsLoadingSongs(false);
+        }
+        onToggle();
+    };
+
     return (
         <div className="border border-gray-200 rounded-lg shadow-sm overflow-hidden h-auto">
             <div className="p-4 bg-white">
@@ -92,7 +108,12 @@ const SetlistCard = ({
 
             {isExpanded && (
                 <div className="bg-gray-50 p-4 border-t border-gray-200">
-                    {setlist.song?.length > 0 ? (
+                    {isLoadingSongs ? (
+                        <div className="flex justify-center py-4">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-500"></div>
+                            <span className="ml-2 text-sm text-gray-500">曲情報を取得中...</span>
+                        </div>
+                    ) : setlist.song?.length > 0 ? (
                         <div className="space-y-1">
                             {setlist.song.map((song, index) => (
                                 <p key={`${setlist.concert_id}-${index}`} className="text-sm">
@@ -107,13 +128,15 @@ const SetlistCard = ({
             )}
 
             <button
-                onClick={onToggle}
+                onClick={handleToggle}
                 className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center border-t border-gray-200"
             >
                 <span className="mr-2 text-sm font-medium text-gray-700">
                     {isExpanded ? 'セットリストを閉じる' : 'セットリストを表示'}
                 </span>
-                {isExpanded ? (
+                {isLoadingSongs ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-500"></div>
+                ) : isExpanded ? (
                     <FiChevronUp className="w-5 h-5 text-gray-500" />
                 ) : (
                     <FiChevronDown className="w-5 h-5 text-gray-500" />
@@ -188,6 +211,32 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
             notice({
                 title: 'エラー',
                 description: 'もう一度お試しください',
+                status: 'error',
+            })
+        }
+    }
+
+    // LiveFansのセットリストの曲情報を取得する関数
+    const loadSongsForSetlist = async (setlistId: string) => {
+        try {
+            // セットリスト詳細APIを呼び出す
+            const response = await fetch(`${API_ENDPOINTS.LIVEFANS_DETAIL(setlistId)}`)
+            const data = await response.json()
+            console.log(data)
+
+            // 取得したデータで該当するセットリストを更新
+            setSetlists(prevSetlists =>
+                prevSetlists.map(setlist =>
+                    setlist.concert_id === setlistId
+                        ? { ...setlist, song: data.songs || [] }
+                        : setlist
+                )
+            )
+        } catch (error) {
+            console.error('セットリスト詳細の取得に失敗しました:', error)
+            notice({
+                title: 'エラー',
+                description: 'セットリスト詳細の取得に失敗しました',
                 status: 'error',
             })
         }
@@ -315,6 +364,8 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                                 onToggle={() => toggleSetlistExpansion(setlist.concert_id)}
                                                 isSelected={selectedSetlist?.concert_id === setlist.concert_id}
                                                 onSelect={() => handleSetlistSelect(setlist)}
+                                                selectedSite={selectedSite}
+                                                loadSongsForSetlist={loadSongsForSetlist}
                                             />
                                         ))}
                                     </div>

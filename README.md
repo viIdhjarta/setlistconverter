@@ -40,6 +40,8 @@ SetlistConverterは、セットリスト投稿サイト（SetlistFM、LiveFans�
 - SetlistFM API
 - GitHub Pages（フロントエンドのホスティング）
 - AWS Lambda
+- AWS SAM (サーバレス環境のCLIでの構築)
+- AWS CDK（コードでのインフラ管理）
 
 ## アーキテクチャ
 
