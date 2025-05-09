@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useDisclosure, useNotice, } from '@yamada-ui/react'
-import { FiCheck, FiX, FiChevronDown, FiChevronUp, FiUser } from 'react-icons/fi'
+import { FiX, FiChevronDown, FiChevronUp, FiUser } from 'react-icons/fi'
 import ConfirmModal from './ConfirmModal'
 import { API_ENDPOINTS } from '../../config';
+import { formatJapaneseDate } from '../../util/formatJapaneseDate';
 
 type EditTrackModalProps = {
     isOpen: boolean
@@ -52,7 +53,6 @@ const SetlistCard = ({
     setlist,
     isExpanded,
     onToggle,
-    isSelected,
     onSelect,
     selectedSite,
     loadSongsForSetlist
@@ -60,7 +60,6 @@ const SetlistCard = ({
     setlist: Setlist,
     isExpanded: boolean,
     onToggle: () => void,
-    isSelected: boolean,
     onSelect: () => void,
     selectedSite: string,
     loadSongsForSetlist: (setlistId: string) => Promise<void>
@@ -93,15 +92,9 @@ const SetlistCard = ({
                             e.stopPropagation();
                             onSelect();
                         }}
-                        className={`inline-flex items-center px-4 py-2 rounded-md text-sm ${isSelected
-                            ? 'bg-green-500 text-white'
-                            : 'bg-purple-500 text-white hover:bg-purple-600'
-                            } transition-colors`}
+                        className={`inline-flex items-center px-4 py-2 rounded-md text-sm bg-purple-500 text-white hover:bg-purple-600 transition-colors`}
                     >
-                        {isSelected && (
-                            <FiCheck className="mr-1" />
-                        )}
-                        {isSelected ? '選択中' : '選択'}
+                        作成
                     </button>
                 </div>
             </div>
@@ -185,7 +178,7 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                         if (item.sets && item.sets.set && item.sets.set.length > 0) {
                             fetchedSetlists.push({
                                 concert_name: item.tour?.name || item.artist.name,
-                                date: item.eventDate,
+                                date: formatJapaneseDate(item.eventDate),
                                 venue: item.venue.name + '  (' + item.venue.city.country.name + ')',
                                 concert_id: item.id,
                                 song: []
@@ -362,7 +355,6 @@ export default function SearchModal({ isOpen, onClose, artistName, data, selecte
                                                 setlist={setlist}
                                                 isExpanded={expandedSetlist === setlist.concert_id}
                                                 onToggle={() => toggleSetlistExpansion(setlist.concert_id)}
-                                                isSelected={selectedSetlist?.concert_id === setlist.concert_id}
                                                 onSelect={() => handleSetlistSelect(setlist)}
                                                 selectedSite={selectedSite}
                                                 loadSongsForSetlist={loadSongsForSetlist}
