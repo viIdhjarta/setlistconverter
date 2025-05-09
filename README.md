@@ -2,8 +2,7 @@
 
 https://viidhjarta.github.io/setlistconverter/
 
-https://github.com/user-attachments/assets/bdc123f7-49d0-4b34-818a-15af65b4cb9a
-
+https://github.com/user-attachments/assets/e890f234-f97e-4d17-816c-8b606cf17326
 
 # SetlistConverter
 
@@ -41,6 +40,8 @@ SetlistConverterは、セットリスト投稿サイト（SetlistFM、LiveFans�
 - SetlistFM API
 - GitHub Pages（フロントエンドのホスティング）
 - AWS Lambda
+- AWS SAM (サーバレス環境のCLIでの構築)
+- AWS CDK（コードでのインフラ管理）
 
 ## アーキテクチャ
 
